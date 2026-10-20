@@ -55,7 +55,9 @@ screen, and say what they have to do themselves.
      login: the user does that). Put `.../sdk/default/openharmony/toolchains` on `PATH`.
    - `./setup.sh get-hdc`: streams the public OpenHarmony 7.0 SDK from Huawei Cloud's mirror
      (about 1.3 GB on macOS, 3.2 GB on Windows/Linux), checks the archive's SHA-256 and keeps only
-     `hdc`, in `~/.aurora-setup/tools/hdc/`. No login needed. On Linux this only works on x86_64.
+     `hdc`, in `~/.aurora-setup/tools/hdc/`. No login needed. On Linux this only works on x86_64. The macOS build is
+     x86_64 too: on Apple Silicon it needs Rosetta (`softwareupdate --install-rosetta`; the user
+     agrees to the licence). Otherwise prefer the arm64 hdc from DevEco Studio or the Command Line Tools.
    - Or pass `--hdc /path/to/hdc`.
 4. Device: developer options on (Settings → About → tap the build number 7×), **USB debugging**
    on, the "Allow USB debugging?" prompt accepted, and the USB mode set to file transfer.

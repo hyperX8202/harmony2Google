@@ -485,7 +485,15 @@ def cmd_get_hdc(args, state):
         target.write_bytes(data)
         target.chmod(0o755)
         log(f"    -> {target}")
-    log(f"    archive SHA-256 verified; hdc: {run([str(dest / ('hdc.exe' if os.name == 'nt' else 'hdc')), '-v'], check=False).strip()}")
+    log("    archive SHA-256 verified")
+    exe = dest / ("hdc.exe" if os.name == "nt" else "hdc")
+    try:
+        log(f"    hdc version: {run([str(exe), '-v'], check=False).strip()}")
+    except (OSError, SetupError) as e:
+        hint = (" The macOS SDK ships an x86_64 hdc: on Apple Silicon install Rosetta with "
+                "'softwareupdate --install-rosetta --agree-to-license' (the user agrees to the licence), "
+                "or use the hdc from DevEco Studio." if sys.platform == "darwin" else "")
+        raise SetupError(f"extracted {exe} but it does not run: {e}.{hint}")
 
 
 def fetch_release(version=None):

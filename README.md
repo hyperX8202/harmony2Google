@@ -1,4 +1,4 @@
-# aurora-setup
+# harmony2Google
 
 Richtet den **Aurora Store** (quelloffener Google-Play-Client, GPL-3.0) auf einem
 **HarmonyOS-Gerät** ein, z. B. einem Huawei Mate XT 2 mit HarmonyOS 7. Am besten lässt man das von

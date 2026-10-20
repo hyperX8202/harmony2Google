@@ -1,0 +1,12 @@
+# never commit build output, downloads or keys
+*.apk
+*.apk.idsig
+*.jks
+*.keystore
+*.p12
+keystore.json
+.aurora-setup/
+__pycache__/
+*.jpeg
+*.png
+.DS_Store

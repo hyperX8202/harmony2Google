@@ -251,11 +251,17 @@ class Device:
 
     # screen
     def screen_locked(self):
+        # The window table lists visible windows first, then a line of dashes, then hidden ones (ZOrd -1).
         out = self.shell("hidumper -s WindowManagerService -a '-a'")
-        visible = out.split("-" * 40)[2] if out.count("-" * 40) >= 2 else out
-        for line in visible.splitlines():
-            m = re.match(r"(SCBScreenLock\S*)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(-?\d+)", line)
-            if m and m.group(2) != "-1":
+        in_table = False
+        for line in out.splitlines():
+            if line.startswith("WindowName"):
+                in_table = True
+                continue
+            if in_table and re.fullmatch(r"-{20,}", line.strip()):
+                break
+            m = re.match(r"SCBScreenLock\S*\s+(?:\S+\s+){6}(-?\d+)", line)
+            if in_table and m and m.group(1) != "-1":
                 return True
         return False
 

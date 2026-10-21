@@ -573,6 +573,11 @@ def cmd_keystore(args, state):
                 "keypass": args.keypass or args.storepass}
         run([keytool(), "-list", "-keystore", str(dst), "-storepass", info["storepass"], "-alias", info["alias"]])
         (state.key_dir / "keystore.json").write_text(json.dumps(info, indent=2) + "\n")
+        try:
+            os.chmod(state.key_dir / "keystore.json", 0o600)
+            os.chmod(dst, 0o600)
+        except OSError:
+            pass
         log(f"    imported {src} -> {dst}")
     elif info:
         log(f"    keystore exists: {state.key_dir / info['file']}")

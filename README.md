@@ -19,7 +19,8 @@ see [Alternative: agent-driven Aurora setup](#alternative-agent-driven-aurora-se
 
 ## Install
 
-1. Download [`gclick/release/Gclick_1.0.apk`](gclick/release/Gclick_1.0.apk) to your phone.
+1. Download `Gclick_1.0.apk` from the [latest release](../../releases/latest) to your phone
+   (the same file is also kept in the repo: [`gclick/release/Gclick_1.0.apk`](gclick/release/Gclick_1.0.apk)).
    - SHA-256: `72e806315e78a52d9ae444c3eb99ce49a89b4dff96f9910ff83bcae11d046be6`
    - Signing certificate SHA-256:
      `AB:5D:98:1F:9A:20:0A:AB:76:FC:AA:B4:C4:17:AB:CC:42:D3:44:9C:92:59:9A:AE:EB:93:07:94:9F:48:3A:AA`

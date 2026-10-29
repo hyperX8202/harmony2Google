@@ -10,3 +10,11 @@ __pycache__/
 *.jpeg
 *.png
 .DS_Store
+
+# Gclick / aurora-mod: build output stays out, the release APK and the launcher icons are tracked
+out/
+aurora-mod/out/
+gclick/out/
+!gclick/release/Gclick_1.0.apk
+!gclick/proj/res/**/*.png
+!gclick/icon.png

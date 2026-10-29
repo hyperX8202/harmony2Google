@@ -1,0 +1,1781 @@
+diff -ruN a/AndroidManifest.xml b/AndroidManifest.xml
+--- a/AndroidManifest.xml	2026-10-29 19:05:36
++++ b/AndroidManifest.xml	2026-10-29 15:22:28
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="37" android:compileSdkVersionCodename="17" package="com.aurora.store" platformBuildVersionCode="37" platformBuildVersionName="17">
++<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="37" android:compileSdkVersionCodename="17" package="com.ab.astore" platformBuildVersionCode="37" platformBuildVersionName="17">
+     <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
+     <uses-permission android:name="android.permission.DELETE_PACKAGES"/>
+     <uses-permission android:name="android.permission.INTERNET"/>
+@@ -22,6 +22,7 @@
+     <uses-feature android:name="android.hardware.gamepad" android:required="false"/>
+     <uses-feature android:name="android.software.device_admin" android:required="false"/>
+     <uses-permission android:name="android.permission.WAKE_LOCK"/>
++    <uses-permission android:name="android.permission.REORDER_TASKS"/>
+     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+     <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+@@ -31,6 +32,8 @@
+     </queries>
+     <permission android:name="com.aurora.store.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="signature"/>
+     <uses-permission android:name="com.aurora.store.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"/>
++    <permission android:name="com.ab.astore.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="signature"/>
++    <uses-permission android:name="com.ab.astore.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"/>
+     <uses-permission android:name="moe.shizuku.manager.permission.API_V23"/>
+     <application android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:banner="@drawable/ic_tv_banner" android:dataExtractionRules="@xml/backup_rules" android:enableOnBackInvokedCallback="true" android:extractNativeLibs="false" android:fullBackupContent="@xml/backup_rules_legacy" android:hardwareAccelerated="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:localeConfig="@xml/_generated_res_locale_config" android:name="com.aurora.store.AuroraApp" android:preserveLegacyExternalStorage="true" android:requestLegacyExternalStorage="true" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/AppTheme">
+         <activity android:exported="true" android:name="com.aurora.store.ComposeActivity" android:windowSoftInputMode="adjustResize">
+@@ -144,5 +147,7 @@
+         <activity android:exported="false" android:name="com.jakewharton.processphoenix.PhoenixActivity" android:process=":phoenix" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+         <service android:exported="false" android:name="com.jakewharton.processphoenix.PhoenixService" android:process=":phoenix"/>
+         <meta-data android:name="componentverify_ag_cbg_root" android:value="@string/ag_sdk_cbg_root"/>
++            <service android:exported="false" android:foregroundServiceType="dataSync" android:name="com.ab.hook.EAService"/>
++        <receiver android:exported="false" android:name="com.ab.hook.EAAlarm"/>
+     </application>
+ </manifest>
+diff -ruN a/apktool.yml b/apktool.yml
+--- a/apktool.yml	2026-10-29 19:05:37
++++ b/apktool.yml	2026-10-29 15:22:28
+@@ -1,5 +1,5 @@
+ version: 3.0.3
+-apkFileName: AuroraStore-hw-4.8.4.apk
++apkFileName: astore.apk
+ usesFramework:
+   ids:
+   - 1
+@@ -7,8 +7,8 @@
+   minSdkVersion: 23
+   targetSdkVersion: 37
+ versionInfo:
+-  versionCode: 76
+-  versionName: 4.8.4-hw
++  versionCode: 82
++  versionName: 4.8.4-hw7
+ resourcesInfo:
+   packageId: 127
+ doNotCompress:
+diff -ruN a/res/values/attrs.xml b/res/values/attrs.xml
+--- a/res/values/attrs.xml	2026-10-29 19:05:36
++++ b/res/values/attrs.xml	2026-10-27 17:49:11
+@@ -51,24 +51,24 @@
+     <attr name="allowStacking" format="boolean" />
+     <attr name="alpha" format="float" />
+     <attr name="alphabeticModifiers">
+-        <flag name="META" value="0x10000" />
+-        <flag name="CTRL" value="0x1000" />
+         <flag name="ALT" value="0x2" />
++        <flag name="CTRL" value="0x1000" />
++        <flag name="FUNCTION" value="0x8" />
++        <flag name="META" value="0x10000" />
+         <flag name="SHIFT" value="0x1" />
+         <flag name="SYM" value="0x4" />
+-        <flag name="FUNCTION" value="0x8" />
+     </attr>
+     <attr name="animateCircleAngleTo">
++        <enum name="antiClockwise" value="3" />
+         <enum name="bestChoice" value="0" />
+-        <enum name="closest" value="1" />
+         <enum name="clockwise" value="2" />
+-        <enum name="antiClockwise" value="3" />
++        <enum name="closest" value="1" />
+         <enum name="constraint" value="4" />
+     </attr>
+     <attr name="animateRelativeTo" format="reference" />
+     <attr name="animationMode">
+-        <enum name="slide" value="0" />
+         <enum name="fade" value="1" />
++        <enum name="slide" value="0" />
+     </attr>
+     <attr name="appBarLayoutStyle" format="reference" />
+     <attr name="arrowHeadLength" format="dimension" />
+@@ -95,22 +95,22 @@
+     <attr name="backgroundStacked" format="color|reference" />
+     <attr name="backgroundTint" format="color" />
+     <attr name="backgroundTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="badgeFixedEdge">
+-        <enum name="start" value="0" />
+         <enum name="end" value="1" />
++        <enum name="start" value="0" />
+     </attr>
+     <attr name="badgeGravity">
+-        <enum name="TOP_END" value="8388661" />
+-        <enum name="TOP_START" value="8388659" />
+         <enum name="BOTTOM_END" value="8388693" />
+         <enum name="BOTTOM_START" value="8388691" />
++        <enum name="TOP_END" value="8388661" />
++        <enum name="TOP_START" value="8388659" />
+     </attr>
+     <attr name="badgeHeight" format="dimension" />
+     <attr name="badgeRadius" format="dimension" />
+@@ -131,12 +131,12 @@
+     <attr name="barLength" format="dimension" />
+     <attr name="barrierAllowsGoneWidgets" format="boolean" />
+     <attr name="barrierDirection">
++        <enum name="bottom" value="3" />
++        <enum name="end" value="6" />
+         <enum name="left" value="0" />
+         <enum name="right" value="1" />
+-        <enum name="top" value="2" />
+-        <enum name="bottom" value="3" />
+         <enum name="start" value="5" />
+-        <enum name="end" value="6" />
++        <enum name="top" value="2" />
+     </attr>
+     <attr name="barrierMargin" format="dimension" />
+     <attr name="behavior_autoExpandOnRequestChildRectangleOffscreen" format="boolean" />
+@@ -154,12 +154,12 @@
+         <enum name="auto" value="-1" />
+     </attr>
+     <attr name="behavior_saveFlags">
+-        <flag name="peekHeight" value="0x1" />
++        <flag name="all" value="-1" />
+         <flag name="fitToContents" value="0x2" />
+         <flag name="hideable" value="0x4" />
+-        <flag name="skipCollapsed" value="0x8" />
+-        <flag name="all" value="-1" />
+         <flag name="none" value="0" />
++        <flag name="peekHeight" value="0x1" />
++        <flag name="skipCollapsed" value="0x8" />
+     </attr>
+     <attr name="behavior_significantVelocityThreshold" format="dimension" />
+     <attr name="behavior_skipCollapsed" format="boolean" />
+@@ -173,8 +173,8 @@
+     <attr name="bottomSheetStyle" format="reference" />
+     <attr name="boxBackgroundColor" format="color" />
+     <attr name="boxBackgroundMode">
+-        <enum name="none" value="0" />
+         <enum name="filled" value="1" />
++        <enum name="none" value="0" />
+         <enum name="outline" value="2" />
+     </attr>
+     <attr name="boxCollapsedPaddingTop" format="dimension" />
+@@ -193,20 +193,20 @@
+     <attr name="buttonBarStyle" format="reference" />
+     <attr name="buttonCompat" format="reference" />
+     <attr name="buttonGravity">
++        <flag name="bottom" value="0x50" />
+         <flag name="center_vertical" value="0x10" />
+         <flag name="top" value="0x30" />
+-        <flag name="bottom" value="0x50" />
+     </attr>
+     <attr name="buttonIcon" format="reference" />
+     <attr name="buttonIconDimen" format="dimension" />
+     <attr name="buttonIconTint" format="color|reference" />
+     <attr name="buttonIconTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="buttonPanelSideLayout" format="reference" />
+     <attr name="buttonSizeChange" format="reference" />
+@@ -214,12 +214,12 @@
+     <attr name="buttonStyleSmall" format="reference" />
+     <attr name="buttonTint" format="color" />
+     <attr name="buttonTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="cardBackgroundColor" format="color" />
+     <attr name="cardCornerRadius" format="dimension" />
+@@ -229,13 +229,13 @@
+     <attr name="cardPreventCornerOverlap" format="boolean" />
+     <attr name="cardUseCompatPadding" format="boolean" />
+     <attr name="carousel_alignment">
+-        <enum name="start" value="0" />
+         <enum name="center" value="1" />
++        <enum name="start" value="0" />
+     </attr>
+     <attr name="carousel_backwardTransition" format="reference" />
+     <attr name="carousel_emptyViewsBehavior">
+-        <enum name="invisible" value="4" />
+         <enum name="gone" value="8" />
++        <enum name="invisible" value="4" />
+     </attr>
+     <attr name="carousel_firstView" format="reference" />
+     <attr name="carousel_forwardTransition" format="reference" />
+@@ -243,8 +243,8 @@
+     <attr name="carousel_nextState" format="reference" />
+     <attr name="carousel_previousState" format="reference" />
+     <attr name="carousel_touchUpMode">
+-        <enum name="immediateStop" value="1" />
+         <enum name="carryVelocity" value="2" />
++        <enum name="immediateStop" value="1" />
+     </attr>
+     <attr name="carousel_touchUp_dampeningFactor" format="float" />
+     <attr name="carousel_touchUp_velocityThreshold" format="float" />
+@@ -254,12 +254,12 @@
+     <attr name="checkMarkCompat" format="reference" />
+     <attr name="checkMarkTint" format="color" />
+     <attr name="checkMarkTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="checkboxStyle" format="reference" />
+     <attr name="checkedButton" format="reference" />
+@@ -270,9 +270,9 @@
+     <attr name="checkedIconTint" format="color" />
+     <attr name="checkedIconVisible" format="boolean" />
+     <attr name="checkedState">
+-        <enum name="unchecked" value="0" />
+         <enum name="checked" value="1" />
+         <enum name="indeterminate" value="2" />
++        <enum name="unchecked" value="0" />
+     </attr>
+     <attr name="checkedTextViewStyle" format="reference" />
+     <attr name="chipBackgroundColor" format="color" />
+@@ -391,11 +391,11 @@
+     <attr name="commitIcon" format="reference" />
+     <attr name="compatShadowEnabled" format="boolean" />
+     <attr name="constraintRotate">
++        <enum name="left" value="2" />
+         <enum name="none" value="0" />
+         <enum name="right" value="1" />
+-        <enum name="left" value="2" />
+-        <enum name="x_right" value="3" />
+         <enum name="x_left" value="4" />
++        <enum name="x_right" value="3" />
+     </attr>
+     <attr name="constraintSet" format="reference" />
+     <attr name="constraint_referenced_ids" format="string" />
+@@ -434,24 +434,24 @@
+     <attr name="coordinatorLayoutStyle" format="reference" />
+     <attr name="coplanarSiblingViewId" format="reference" />
+     <attr name="cornerFamily">
+-        <enum name="rounded" value="0" />
+         <enum name="cut" value="1" />
++        <enum name="rounded" value="0" />
+     </attr>
+     <attr name="cornerFamilyBottomLeft">
+-        <enum name="rounded" value="0" />
+         <enum name="cut" value="1" />
++        <enum name="rounded" value="0" />
+     </attr>
+     <attr name="cornerFamilyBottomRight">
+-        <enum name="rounded" value="0" />
+         <enum name="cut" value="1" />
++        <enum name="rounded" value="0" />
+     </attr>
+     <attr name="cornerFamilyTopLeft">
+-        <enum name="rounded" value="0" />
+         <enum name="cut" value="1" />
++        <enum name="rounded" value="0" />
+     </attr>
+     <attr name="cornerFamilyTopRight">
+-        <enum name="rounded" value="0" />
+         <enum name="cut" value="1" />
++        <enum name="rounded" value="0" />
+     </attr>
+     <attr name="cornerRadius" format="dimension" />
+     <attr name="cornerSize" format="dimension|fraction" />
+@@ -498,13 +498,13 @@
+     <attr name="dialogTitle" format="string" />
+     <attr name="disableDependentsState" format="boolean" />
+     <attr name="displayOptions">
++        <flag name="disableHome" value="0x20" />
++        <flag name="homeAsUp" value="0x4" />
+         <flag name="none" value="0" />
+-        <flag name="useLogo" value="0x1" />
++        <flag name="showCustom" value="0x10" />
+         <flag name="showHome" value="0x2" />
+-        <flag name="homeAsUp" value="0x4" />
+         <flag name="showTitle" value="0x8" />
+-        <flag name="showCustom" value="0x10" />
+-        <flag name="disableHome" value="0x20" />
++        <flag name="useLogo" value="0x1" />
+     </attr>
+     <attr name="divider" format="reference" />
+     <attr name="dividerColor" format="color|reference" />
+@@ -517,11 +517,11 @@
+     <attr name="dockedToolbarStyle" format="reference" />
+     <attr name="dockedToolbarVibrantStyle" format="reference" />
+     <attr name="drawPath">
++        <enum name="asConfigured" value="4" />
++        <enum name="deltaRelative" value="3" />
+         <enum name="none" value="0" />
+         <enum name="path" value="1" />
+         <enum name="pathRelative" value="2" />
+-        <enum name="deltaRelative" value="3" />
+-        <enum name="asConfigured" value="4" />
+         <enum name="rectangles" value="5" />
+     </attr>
+     <attr name="drawableBottomCompat" format="reference" />
+@@ -532,12 +532,12 @@
+     <attr name="drawableStartCompat" format="reference" />
+     <attr name="drawableTint" format="color" />
+     <attr name="drawableTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="drawableTopCompat" format="reference" />
+     <attr name="drawerArrowStyle" format="reference" />
+@@ -565,28 +565,28 @@
+     <attr name="endIconDrawable" format="reference" />
+     <attr name="endIconMinSize" format="dimension" />
+     <attr name="endIconMode">
++        <enum name="clear_text" value="2" />
+         <enum name="custom" value="-1" />
++        <enum name="dropdown_menu" value="3" />
+         <enum name="none" value="0" />
+         <enum name="password_toggle" value="1" />
+-        <enum name="clear_text" value="2" />
+-        <enum name="dropdown_menu" value="3" />
+     </attr>
+     <attr name="endIconScaleType">
+-        <enum name="fitXY" value="0" />
+-        <enum name="fitStart" value="1" />
+-        <enum name="fitCenter" value="2" />
+-        <enum name="fitEnd" value="3" />
+         <enum name="center" value="4" />
+         <enum name="centerCrop" value="5" />
+         <enum name="centerInside" value="6" />
++        <enum name="fitCenter" value="2" />
++        <enum name="fitEnd" value="3" />
++        <enum name="fitStart" value="1" />
++        <enum name="fitXY" value="0" />
+     </attr>
+     <attr name="endIconTint" format="color" />
+     <attr name="endIconTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="enforceMaterialTheme" format="boolean" />
+     <attr name="enforceTextAppearance" format="boolean" />
+@@ -600,11 +600,11 @@
+     <attr name="errorIconDrawable" format="reference" />
+     <attr name="errorIconTint" format="reference" />
+     <attr name="errorIconTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="errorShown" format="boolean" />
+     <attr name="errorTextAppearance" format="reference" />
+@@ -627,8 +627,8 @@
+     <attr name="extendMotionSpec" format="reference" />
+     <attr name="extendStrategy">
+         <enum name="auto" value="0" />
+-        <enum name="wrap_content" value="1" />
+         <enum name="match_parent" value="2" />
++        <enum name="wrap_content" value="1" />
+     </attr>
+     <attr name="extendedFloatingActionButtonLargeStyle" format="reference" />
+     <attr name="extendedFloatingActionButtonMediumStyle" format="reference" />
+@@ -645,8 +645,8 @@
+     </attr>
+     <attr name="fabAlignmentModeEndMargin" format="dimension" />
+     <attr name="fabAnchorMode">
+-        <enum name="embed" value="0" />
+         <enum name="cradle" value="1" />
++        <enum name="embed" value="0" />
+     </attr>
+     <attr name="fabAnimationMode">
+         <enum name="scale" value="0" />
+@@ -658,8 +658,8 @@
+     <attr name="fabCustomSize" format="dimension" />
+     <attr name="fabSize">
+         <enum name="auto" value="-1" />
+-        <enum name="normal" value="0" />
+         <enum name="mini" value="1" />
++        <enum name="normal" value="0" />
+     </attr>
+     <attr name="fastScrollEnabled" format="boolean" />
+     <attr name="fastScrollHorizontalThumbDrawable" format="reference" />
+@@ -687,59 +687,59 @@
+     <attr name="floatingToolbarVibrantStyle" format="reference" />
+     <attr name="flow_firstHorizontalBias" format="float" />
+     <attr name="flow_firstHorizontalStyle">
++        <enum name="packed" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="spread_inside" value="1" />
+-        <enum name="packed" value="2" />
+     </attr>
+     <attr name="flow_firstVerticalBias" format="float" />
+     <attr name="flow_firstVerticalStyle">
++        <enum name="packed" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="spread_inside" value="1" />
+-        <enum name="packed" value="2" />
+     </attr>
+     <attr name="flow_horizontalAlign">
+-        <enum name="start" value="0" />
+-        <enum name="end" value="1" />
+         <enum name="center" value="2" />
++        <enum name="end" value="1" />
++        <enum name="start" value="0" />
+     </attr>
+     <attr name="flow_horizontalBias" format="float" />
+     <attr name="flow_horizontalGap" format="dimension" />
+     <attr name="flow_horizontalStyle">
++        <enum name="packed" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="spread_inside" value="1" />
+-        <enum name="packed" value="2" />
+     </attr>
+     <attr name="flow_lastHorizontalBias" format="float" />
+     <attr name="flow_lastHorizontalStyle">
++        <enum name="packed" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="spread_inside" value="1" />
+-        <enum name="packed" value="2" />
+     </attr>
+     <attr name="flow_lastVerticalBias" format="float" />
+     <attr name="flow_lastVerticalStyle">
++        <enum name="packed" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="spread_inside" value="1" />
+-        <enum name="packed" value="2" />
+     </attr>
+     <attr name="flow_maxElementsWrap" format="integer" />
+     <attr name="flow_verticalAlign">
+-        <enum name="top" value="0" />
++        <enum name="baseline" value="3" />
+         <enum name="bottom" value="1" />
+         <enum name="center" value="2" />
+-        <enum name="baseline" value="3" />
++        <enum name="top" value="0" />
+     </attr>
+     <attr name="flow_verticalBias" format="float" />
+     <attr name="flow_verticalGap" format="dimension" />
+     <attr name="flow_verticalStyle">
++        <enum name="packed" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="spread_inside" value="1" />
+-        <enum name="packed" value="2" />
+     </attr>
+     <attr name="flow_wrapMode">
+-        <enum name="none" value="0" />
+-        <enum name="chain" value="1" />
+         <enum name="aligned" value="2" />
++        <enum name="chain" value="1" />
+         <enum name="chain2" value="3" />
++        <enum name="none" value="0" />
+     </attr>
+     <attr name="focusRingsEnabled" format="boolean" />
+     <attr name="focusRingsInnerStrokeColor" format="color" />
+@@ -756,8 +756,8 @@
+     <attr name="fontProviderCerts" format="reference" />
+     <attr name="fontProviderFallbackQuery" format="string" />
+     <attr name="fontProviderFetchStrategy">
+-        <enum name="blocking" value="0" />
+         <enum name="async" value="1" />
++        <enum name="blocking" value="0" />
+     </attr>
+     <attr name="fontProviderFetchTimeout" format="integer">
+         <enum name="forever" value="-1" />
+@@ -766,8 +766,8 @@
+     <attr name="fontProviderQuery" format="string" />
+     <attr name="fontProviderSystemFontFamily" format="string" />
+     <attr name="fontStyle">
+-        <enum name="normal" value="0" />
+         <enum name="italic" value="1" />
++        <enum name="normal" value="0" />
+     </attr>
+     <attr name="fontVariationSettings" format="string" />
+     <attr name="fontWeight" format="integer" />
+@@ -802,12 +802,12 @@
+     <attr name="icon" format="reference" />
+     <attr name="iconEndPadding" format="dimension" />
+     <attr name="iconGravity">
+-        <flag name="start" value="0x1" />
+-        <flag name="textStart" value="0x2" />
+         <flag name="end" value="0x3" />
++        <flag name="start" value="0x1" />
+         <flag name="textEnd" value="0x4" />
+-        <flag name="top" value="0x10" />
++        <flag name="textStart" value="0x2" />
+         <flag name="textTop" value="0x20" />
++        <flag name="top" value="0x10" />
+     </attr>
+     <attr name="iconLabelHorizontalSpacing" format="dimension" />
+     <attr name="iconPadding" format="dimension" />
+@@ -816,12 +816,12 @@
+     <attr name="iconStartPadding" format="dimension" />
+     <attr name="iconTint" format="color" />
+     <attr name="iconTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="imageButtonStyle" format="reference" />
+     <attr name="indeterminateAnimationType">
+@@ -836,10 +836,10 @@
+         <enum name="counterclockwise" value="1" />
+     </attr>
+     <attr name="indicatorDirectionLinear">
++        <enum name="endToStart" value="3" />
+         <enum name="leftToRight" value="0" />
+         <enum name="rightToLeft" value="1" />
+         <enum name="startToEnd" value="2" />
+-        <enum name="endToStart" value="3" />
+     </attr>
+     <attr name="indicatorInset" format="dimension" />
+     <attr name="indicatorSize" format="dimension" />
+@@ -858,8 +858,8 @@
+     <attr name="itemHorizontalPadding" format="dimension" />
+     <attr name="itemHorizontalTranslationEnabled" format="boolean" />
+     <attr name="itemIconGravity">
+-        <enum name="top" value="0" />
+         <enum name="start" value="1" />
++        <enum name="top" value="0" />
+     </attr>
+     <attr name="itemIconPadding" format="dimension" />
+     <attr name="itemIconSize" format="dimension" />
+@@ -891,8 +891,8 @@
+     <attr name="labelTextAppearance" format="reference" />
+     <attr name="labelVisibilityMode">
+         <enum name="auto" value="-1" />
+-        <enum name="selected" value="0" />
+         <enum name="labeled" value="1" />
++        <enum name="selected" value="0" />
+         <enum name="unlabeled" value="2" />
+     </attr>
+     <attr name="largeFontVerticalOffsetAdjustment" format="dimension" />
+@@ -903,26 +903,26 @@
+     <attr name="layoutManager" format="string" />
+     <attr name="layout_anchor" format="reference" />
+     <attr name="layout_anchorGravity">
+-        <flag name="top" value="0x30" />
+         <flag name="bottom" value="0x50" />
+-        <flag name="left" value="0x3" />
+-        <flag name="right" value="0x5" />
+-        <flag name="center_vertical" value="0x10" />
+-        <flag name="fill_vertical" value="0x70" />
+-        <flag name="center_horizontal" value="0x1" />
+-        <flag name="fill_horizontal" value="0x7" />
+         <flag name="center" value="0x11" />
+-        <flag name="fill" value="0x77" />
+-        <flag name="clip_vertical" value="0x80" />
++        <flag name="center_horizontal" value="0x1" />
++        <flag name="center_vertical" value="0x10" />
+         <flag name="clip_horizontal" value="0x8" />
+-        <flag name="start" value="0x800003" />
++        <flag name="clip_vertical" value="0x80" />
+         <flag name="end" value="0x800005" />
++        <flag name="fill" value="0x77" />
++        <flag name="fill_horizontal" value="0x7" />
++        <flag name="fill_vertical" value="0x70" />
++        <flag name="left" value="0x3" />
++        <flag name="right" value="0x5" />
++        <flag name="start" value="0x800003" />
++        <flag name="top" value="0x30" />
+     </attr>
+     <attr name="layout_behavior" format="string" />
+     <attr name="layout_collapseMode">
+         <enum name="none" value="0" />
+-        <enum name="pin" value="1" />
+         <enum name="parallax" value="2" />
++        <enum name="pin" value="1" />
+     </attr>
+     <attr name="layout_collapseParallaxMultiplier" format="float" />
+     <attr name="layout_constrainedHeight" format="boolean" />
+@@ -958,15 +958,15 @@
+     <attr name="layout_constraintGuide_end" format="dimension" />
+     <attr name="layout_constraintGuide_percent" format="float" />
+     <attr name="layout_constraintHeight" format="string|dimension">
++        <enum name="match_constraint" value="-3" />
+         <enum name="match_parent" value="-1" />
+         <enum name="wrap_content" value="-2" />
+-        <enum name="match_constraint" value="-3" />
+         <enum name="wrap_content_constrained" value="-4" />
+     </attr>
+     <attr name="layout_constraintHeight_default">
++        <enum name="percent" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="wrap" value="1" />
+-        <enum name="percent" value="2" />
+     </attr>
+     <attr name="layout_constraintHeight_max" format="dimension">
+         <enum name="wrap" value="-2" />
+@@ -977,9 +977,9 @@
+     <attr name="layout_constraintHeight_percent" format="float" />
+     <attr name="layout_constraintHorizontal_bias" format="float" />
+     <attr name="layout_constraintHorizontal_chainStyle">
++        <enum name="packed" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="spread_inside" value="1" />
+-        <enum name="packed" value="2" />
+     </attr>
+     <attr name="layout_constraintHorizontal_weight" format="float" />
+     <attr name="layout_constraintLeft_creator" format="integer" />
+@@ -1012,21 +1012,21 @@
+     </attr>
+     <attr name="layout_constraintVertical_bias" format="float" />
+     <attr name="layout_constraintVertical_chainStyle">
++        <enum name="packed" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="spread_inside" value="1" />
+-        <enum name="packed" value="2" />
+     </attr>
+     <attr name="layout_constraintVertical_weight" format="float" />
+     <attr name="layout_constraintWidth" format="string|dimension">
++        <enum name="match_constraint" value="-3" />
+         <enum name="match_parent" value="-1" />
+         <enum name="wrap_content" value="-2" />
+-        <enum name="match_constraint" value="-3" />
+         <enum name="wrap_content_constrained" value="-4" />
+     </attr>
+     <attr name="layout_constraintWidth_default">
++        <enum name="percent" value="2" />
+         <enum name="spread" value="0" />
+         <enum name="wrap" value="1" />
+-        <enum name="percent" value="2" />
+     </attr>
+     <attr name="layout_constraintWidth_max" format="dimension">
+         <enum name="wrap" value="-2" />
+@@ -1036,14 +1036,14 @@
+     </attr>
+     <attr name="layout_constraintWidth_percent" format="float" />
+     <attr name="layout_dodgeInsetEdges">
+-        <flag name="none" value="0x0" />
+-        <flag name="top" value="0x30" />
++        <flag name="all" value="0x77" />
+         <flag name="bottom" value="0x50" />
++        <flag name="end" value="0x800005" />
+         <flag name="left" value="0x3" />
++        <flag name="none" value="0x0" />
+         <flag name="right" value="0x5" />
+         <flag name="start" value="0x800003" />
+-        <flag name="end" value="0x800005" />
+-        <flag name="all" value="0x77" />
++        <flag name="top" value="0x30" />
+     </attr>
+     <attr name="layout_editor_absoluteX" format="dimension" />
+     <attr name="layout_editor_absoluteY" format="dimension" />
+@@ -1055,53 +1055,53 @@
+     <attr name="layout_goneMarginStart" format="dimension" />
+     <attr name="layout_goneMarginTop" format="dimension" />
+     <attr name="layout_insetEdge">
+-        <enum name="none" value="0x0" />
+-        <enum name="top" value="0x30" />
+         <enum name="bottom" value="0x50" />
++        <enum name="end" value="0x800005" />
+         <enum name="left" value="0x3" />
++        <enum name="none" value="0x0" />
+         <enum name="right" value="0x5" />
+         <enum name="start" value="0x800003" />
+-        <enum name="end" value="0x800005" />
++        <enum name="top" value="0x30" />
+     </attr>
+     <attr name="layout_keyline" format="integer" />
+     <attr name="layout_marginBaseline" format="dimension" />
+     <attr name="layout_optimizationLevel">
+-        <flag name="none" value="0" />
+-        <flag name="legacy" value="0" />
+-        <flag name="standard" value="257" />
+-        <flag name="direct" value="1" />
+         <flag name="barrier" value="2" />
++        <flag name="cache_measures" value="256" />
+         <flag name="chains" value="4" />
++        <flag name="dependency_ordering" value="512" />
+         <flag name="dimensions" value="8" />
+-        <flag name="ratio" value="16" />
+-        <flag name="groups" value="32" />
++        <flag name="direct" value="1" />
+         <flag name="graph" value="64" />
+         <flag name="graph_wrap" value="128" />
+-        <flag name="cache_measures" value="256" />
+-        <flag name="dependency_ordering" value="512" />
+         <flag name="grouping" value="1024" />
++        <flag name="groups" value="32" />
++        <flag name="legacy" value="0" />
++        <flag name="none" value="0" />
++        <flag name="ratio" value="16" />
++        <flag name="standard" value="257" />
+     </attr>
+     <attr name="layout_overflowIcon" />
+     <attr name="layout_overflowText" />
+     <attr name="layout_scrollEffect">
+-        <enum name="none" value="0" />
+         <enum name="compress" value="1" />
++        <enum name="none" value="0" />
+     </attr>
+     <attr name="layout_scrollFlags">
+-        <flag name="noScroll" value="0x0" />
+-        <flag name="scroll" value="0x1" />
+-        <flag name="exitUntilCollapsed" value="0x2" />
+         <flag name="enterAlways" value="0x4" />
+         <flag name="enterAlwaysCollapsed" value="0x8" />
++        <flag name="exitUntilCollapsed" value="0x2" />
++        <flag name="noScroll" value="0x0" />
++        <flag name="scroll" value="0x1" />
+         <flag name="snap" value="0x10" />
+         <flag name="snapMargins" value="0x20" />
+     </attr>
+     <attr name="layout_scrollInterpolator" format="reference" />
+     <attr name="layout_wrapBehaviorInParent">
+-        <enum name="included" value="0" />
+         <enum name="horizontal_only" value="1" />
+-        <enum name="vertical_only" value="2" />
++        <enum name="included" value="0" />
+         <enum name="skipped" value="3" />
++        <enum name="vertical_only" value="2" />
+     </attr>
+     <attr name="liftOnScroll" format="boolean" />
+     <attr name="liftOnScrollColor" format="color" />
+@@ -1218,9 +1218,9 @@
+         <enum name="start" value="1" />
+     </attr>
+     <attr name="menuGravity">
+-        <enum name="top" value="49" />
+-        <enum name="center" value="17" />
+         <enum name="bottom" value="81" />
++        <enum name="center" value="17" />
++        <enum name="top" value="49" />
+     </attr>
+     <attr name="methodName" format="string" />
+     <attr name="min" format="integer" />
+@@ -1258,8 +1258,8 @@
+     <attr name="motionEasingStandardDecelerateInterpolator" format="reference" />
+     <attr name="motionEasingStandardInterpolator" format="reference" />
+     <attr name="motionPath" format="string">
+-        <enum name="linear" value="0" />
+         <enum name="arc" value="1" />
++        <enum name="linear" value="0" />
+     </attr>
+     <attr name="motionPathRotate" format="float" />
+     <attr name="motionProgress" format="float" />
+@@ -1276,8 +1276,8 @@
+     <attr name="navigationIcon" format="reference" />
+     <attr name="navigationIconTint" format="color" />
+     <attr name="navigationMode">
+-        <enum name="normal" value="0" />
+         <enum name="listMode" value="1" />
++        <enum name="normal" value="0" />
+         <enum name="tabMode" value="2" />
+     </attr>
+     <attr name="navigationRailStyle" format="reference" />
+@@ -1287,12 +1287,12 @@
+     <attr name="nestedScrollable" format="boolean" />
+     <attr name="number" format="integer" />
+     <attr name="numericModifiers">
+-        <flag name="META" value="0x10000" />
+-        <flag name="CTRL" value="0x1000" />
+         <flag name="ALT" value="0x2" />
++        <flag name="CTRL" value="0x1000" />
++        <flag name="FUNCTION" value="0x8" />
++        <flag name="META" value="0x10000" />
+         <flag name="SHIFT" value="0x1" />
+         <flag name="SYM" value="0x4" />
+-        <flag name="FUNCTION" value="0x8" />
+     </attr>
+     <attr name="offsetAlignmentMode">
+         <enum name="edge" value="0" />
+@@ -1308,8 +1308,8 @@
+     <attr name="overflowLinearLayoutPopupMenuStyle" format="reference" />
+     <attr name="overflowLinearLayoutStyle" format="reference" />
+     <attr name="overflowMode">
+-        <enum name="none" value="0" />
+         <enum name="menu" value="1" />
++        <enum name="none" value="0" />
+         <enum name="wrap" value="2" />
+     </attr>
+     <attr name="overlapAnchor" format="boolean" />
+@@ -1329,19 +1329,19 @@
+     <attr name="passwordToggleEnabled" format="boolean" />
+     <attr name="passwordToggleTint" format="color" />
+     <attr name="passwordToggleTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="pathMotionArc">
++        <enum name="above" value="5" />
++        <enum name="below" value="4" />
++        <enum name="flip" value="3" />
+         <enum name="none" value="0" />
+-        <enum name="startVertical" value="1" />
+         <enum name="startHorizontal" value="2" />
+-        <enum name="flip" value="3" />
+-        <enum name="below" value="4" />
+-        <enum name="above" value="5" />
++        <enum name="startVertical" value="1" />
+     </attr>
+     <attr name="persistent" format="boolean" />
+     <attr name="pivotAnchor" format="reference">
+@@ -1365,18 +1365,18 @@
+     <attr name="preserveIconSpacing" format="boolean" />
+     <attr name="pressedTranslationZ" format="dimension" />
+     <attr name="primaryActionSwipeMode">
++        <enum name="direct" value="2" />
+         <enum name="disabled" value="0" />
+         <enum name="indirect" value="1" />
+-        <enum name="direct" value="2" />
+     </attr>
+     <attr name="progressBarPadding" format="dimension" />
+     <attr name="progressBarStyle" format="reference" />
+     <attr name="quantizeMotionInterpolator" format="string|reference">
+-        <enum name="easeInOut" value="0" />
++        <enum name="bounce" value="4" />
+         <enum name="easeIn" value="1" />
++        <enum name="easeInOut" value="0" />
+         <enum name="easeOut" value="2" />
+         <enum name="linear" value="3" />
+-        <enum name="bounce" value="4" />
+         <enum name="overshoot" value="5" />
+     </attr>
+     <attr name="quantizeMotionPhase" format="float" />
+@@ -1403,20 +1403,20 @@
+     <attr name="searchViewStyle" format="reference" />
+     <attr name="secondaryIcon" format="reference" />
+     <attr name="secondaryIconGravity">
+-        <flag name="start" value="0x1" />
+-        <flag name="textStart" value="0x2" />
+         <flag name="end" value="0x3" />
++        <flag name="start" value="0x1" />
+         <flag name="textEnd" value="0x4" />
+-        <flag name="top" value="0x10" />
++        <flag name="textStart" value="0x2" />
+         <flag name="textTop" value="0x20" />
++        <flag name="top" value="0x10" />
+     </attr>
+     <attr name="secondaryIconTint" format="color" />
+     <attr name="secondaryIconTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="seekBarIncrement" format="integer" />
+     <attr name="seekBarPreferenceStyle" format="reference" />
+@@ -1440,8 +1440,8 @@
+     <attr name="shapeAppearanceOverlay" format="reference" />
+     <attr name="shapeAppearanceSmallComponent" format="reference" />
+     <attr name="shapeCornerFamily">
+-        <enum name="rounded" value="0" />
+         <enum name="cut" value="1" />
++        <enum name="rounded" value="0" />
+     </attr>
+     <attr name="shapeCornerSizeExtraExtraLarge" format="dimension|fraction" />
+     <attr name="shapeCornerSizeExtraLarge" format="dimension|fraction" />
+@@ -1454,17 +1454,17 @@
+     <attr name="shouldDisableView" format="boolean" />
+     <attr name="shouldRemoveExpandedCorners" format="boolean" />
+     <attr name="showAsAction">
+-        <flag name="never" value="0" />
+-        <flag name="ifRoom" value="1" />
+         <flag name="always" value="2" />
+-        <flag name="withText" value="4" />
+         <flag name="collapseActionView" value="8" />
++        <flag name="ifRoom" value="1" />
++        <flag name="never" value="0" />
++        <flag name="withText" value="4" />
+     </attr>
+     <attr name="showDividers">
+-        <flag name="none" value="0" />
+         <flag name="beginning" value="1" />
+-        <flag name="middle" value="2" />
+         <flag name="end" value="4" />
++        <flag name="middle" value="2" />
++        <flag name="none" value="0" />
+     </attr>
+     <attr name="showMarker" format="boolean" />
+     <attr name="showMotionSpec" format="reference" />
+@@ -1498,21 +1498,21 @@
+     <attr name="startIconDrawable" format="reference" />
+     <attr name="startIconMinSize" format="dimension" />
+     <attr name="startIconScaleType">
+-        <enum name="fitXY" value="0" />
+-        <enum name="fitStart" value="1" />
+-        <enum name="fitCenter" value="2" />
+-        <enum name="fitEnd" value="3" />
+         <enum name="center" value="4" />
+         <enum name="centerCrop" value="5" />
+         <enum name="centerInside" value="6" />
++        <enum name="fitCenter" value="2" />
++        <enum name="fitEnd" value="3" />
++        <enum name="fitStart" value="1" />
++        <enum name="fitXY" value="0" />
+     </attr>
+     <attr name="startIconTint" format="color" />
+     <attr name="startIconTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="stateLabels" format="string" />
+     <attr name="state_collapsed" format="boolean" />
+@@ -1555,31 +1555,31 @@
+     <attr name="switchTextOff" format="string" />
+     <attr name="switchTextOn" format="string" />
+     <attr name="tabGravity">
+-        <enum name="fill" value="0" />
+         <enum name="center" value="1" />
++        <enum name="fill" value="0" />
+         <enum name="start" value="2" />
+     </attr>
+     <attr name="tabIconTint" format="color" />
+     <attr name="tabIndicator" format="reference" />
+     <attr name="tabIndicatorAnimationDuration" format="integer" />
+     <attr name="tabIndicatorAnimationMode">
+-        <enum name="linear" value="0" />
+         <enum name="elastic" value="1" />
+         <enum name="fade" value="2" />
++        <enum name="linear" value="0" />
+     </attr>
+     <attr name="tabIndicatorColor" format="color" />
+     <attr name="tabIndicatorFullWidth" format="boolean" />
+     <attr name="tabIndicatorGravity">
+         <enum name="bottom" value="0" />
+         <enum name="center" value="1" />
+-        <enum name="top" value="2" />
+         <enum name="stretch" value="3" />
++        <enum name="top" value="2" />
+     </attr>
+     <attr name="tabMaxWidth" format="dimension" />
+     <attr name="tabMode">
+-        <enum name="scrollable" value="0" />
+-        <enum name="fixed" value="1" />
+         <enum name="auto" value="2" />
++        <enum name="fixed" value="1" />
++        <enum name="scrollable" value="0" />
+     </attr>
+     <attr name="tabPaddingEnd" format="dimension" />
+     <attr name="tabPaddingStart" format="dimension" />
+@@ -1671,28 +1671,28 @@
+     <attr name="tickMark" format="reference" />
+     <attr name="tickMarkTint" format="color" />
+     <attr name="tickMarkTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="tickRadiusActive" format="dimension" />
+     <attr name="tickRadiusInactive" format="dimension" />
+     <attr name="tint" format="color" />
+     <attr name="tintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="title" format="string" />
+     <attr name="titleCollapseMode">
+-        <enum name="scale" value="0" />
+         <enum name="fade" value="1" />
++        <enum name="scale" value="0" />
+     </attr>
+     <attr name="titleMargin" format="dimension" />
+     <attr name="titleMarginBottom" format="dimension" />
+@@ -1726,19 +1726,19 @@
+     <attr name="trackThickness" format="dimension" />
+     <attr name="trackTint" format="color" />
+     <attr name="trackTintMode">
+-        <enum name="src_over" value="3" />
+-        <enum name="src_in" value="5" />
+-        <enum name="src_atop" value="9" />
++        <enum name="add" value="16" />
+         <enum name="multiply" value="14" />
+         <enum name="screen" value="15" />
+-        <enum name="add" value="16" />
++        <enum name="src_atop" value="9" />
++        <enum name="src_in" value="5" />
++        <enum name="src_over" value="3" />
+     </attr>
+     <attr name="transformPivotTarget" format="reference" />
+     <attr name="transitionEasing" format="string">
+-        <enum name="standard" value="0" />
+         <enum name="accelerate" value="1" />
+         <enum name="decelerate" value="2" />
+         <enum name="linear" value="3" />
++        <enum name="standard" value="0" />
+     </attr>
+     <attr name="transitionPathRotate" format="float" />
+     <attr name="transitionShapeAppearance" format="reference" />
+@@ -1750,8 +1750,8 @@
+     <attr name="verticalOffsetWithText" format="dimension" />
+     <attr name="viewInflaterClass" format="string" />
+     <attr name="visibilityMode">
+-        <enum name="normal" value="0" />
+         <enum name="ignore" value="1" />
++        <enum name="normal" value="0" />
+     </attr>
+     <attr name="voiceIcon" format="reference" />
+     <attr name="widgetLayout" format="reference" />
+diff -ruN a/res/values/public.xml b/res/values/public.xml
+--- a/res/values/public.xml	2026-10-29 19:05:36
++++ b/res/values/public.xml	2026-10-27 17:49:11
+@@ -2681,50 +2681,50 @@
+     <public type="drawable" name="$ic_launcher_foreground__2" id="0x7f080008" />
+     <public type="drawable" name="$ic_launcher_foreground__3" id="0x7f080009" />
+     <public type="drawable" name="$ic_launcher_foreground__4" id="0x7f08000a" />
+-    <public type="drawable" name="$ic_logo_alt__0" id="0x7f080010" />
+-    <public type="drawable" name="$ic_logo_alt__1" id="0x7f080011" />
+-    <public type="drawable" name="$ic_logo_alt__2" id="0x7f080012" />
+-    <public type="drawable" name="$ic_logo_alt__3" id="0x7f080013" />
+-    <public type="drawable" name="$ic_logo_alt__4" id="0x7f080014" />
+-    <public type="drawable" name="$ic_tv_banner__0" id="0x7f080015" />
+-    <public type="drawable" name="$ic_tv_banner__1" id="0x7f080016" />
+-    <public type="drawable" name="$ic_tv_banner__2" id="0x7f080017" />
+-    <public type="drawable" name="$ic_tv_banner__3" id="0x7f080018" />
+-    <public type="drawable" name="$ic_tv_banner__4" id="0x7f080019" />
+-    <public type="drawable" name="$m3_avd_hide_password__0" id="0x7f08001a" />
+-    <public type="drawable" name="$m3_avd_hide_password__1" id="0x7f08001b" />
+-    <public type="drawable" name="$m3_avd_hide_password__2" id="0x7f08001c" />
+-    <public type="drawable" name="$m3_avd_show_password__0" id="0x7f08001d" />
+-    <public type="drawable" name="$m3_avd_show_password__1" id="0x7f08001e" />
+-    <public type="drawable" name="$m3_avd_show_password__2" id="0x7f08001f" />
+-    <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__0" id="0x7f080020" />
+-    <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__1" id="0x7f080021" />
+-    <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__2" id="0x7f080022" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_checked_indeterminate__0" id="0x7f080023" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_checked_unchecked__0" id="0x7f080024" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_checked_unchecked__1" id="0x7f080025" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_checked_unchecked__2" id="0x7f080026" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_indeterminate_checked__0" id="0x7f080027" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_indeterminate_unchecked__0" id="0x7f080028" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_indeterminate_unchecked__1" id="0x7f080029" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_indeterminate_unchecked__2" id="0x7f08002a" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_checked__0" id="0x7f08002b" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_checked__1" id="0x7f08002c" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_checked__2" id="0x7f08002d" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_indeterminate__0" id="0x7f08002e" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_indeterminate__1" id="0x7f08002f" />
+-    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_indeterminate__2" id="0x7f080030" />
+-    <public type="drawable" name="$mtrl_checkbox_button_unchecked_checked__0" id="0x7f080031" />
+-    <public type="drawable" name="$mtrl_checkbox_button_unchecked_checked__1" id="0x7f080032" />
+-    <public type="drawable" name="$mtrl_checkbox_button_unchecked_checked__2" id="0x7f080033" />
+-    <public type="drawable" name="$mtrl_switch_thumb_checked_pressed__0" id="0x7f080034" />
+-    <public type="drawable" name="$mtrl_switch_thumb_checked_unchecked__0" id="0x7f080035" />
+-    <public type="drawable" name="$mtrl_switch_thumb_checked_unchecked__1" id="0x7f080036" />
+-    <public type="drawable" name="$mtrl_switch_thumb_pressed_checked__0" id="0x7f080037" />
+-    <public type="drawable" name="$mtrl_switch_thumb_pressed_unchecked__0" id="0x7f080038" />
+-    <public type="drawable" name="$mtrl_switch_thumb_unchecked_checked__0" id="0x7f080039" />
+-    <public type="drawable" name="$mtrl_switch_thumb_unchecked_checked__1" id="0x7f08003a" />
+-    <public type="drawable" name="$mtrl_switch_thumb_unchecked_pressed__0" id="0x7f08003b" />
++    <public type="drawable" name="$ic_logo_alt__0" id="0x7f08000b" />
++    <public type="drawable" name="$ic_logo_alt__1" id="0x7f08000c" />
++    <public type="drawable" name="$ic_logo_alt__2" id="0x7f08000d" />
++    <public type="drawable" name="$ic_logo_alt__3" id="0x7f08000e" />
++    <public type="drawable" name="$ic_logo_alt__4" id="0x7f08000f" />
++    <public type="drawable" name="$ic_tv_banner__0" id="0x7f080010" />
++    <public type="drawable" name="$ic_tv_banner__1" id="0x7f080011" />
++    <public type="drawable" name="$ic_tv_banner__2" id="0x7f080012" />
++    <public type="drawable" name="$ic_tv_banner__3" id="0x7f080013" />
++    <public type="drawable" name="$ic_tv_banner__4" id="0x7f080014" />
++    <public type="drawable" name="$m3_avd_hide_password__0" id="0x7f080015" />
++    <public type="drawable" name="$m3_avd_hide_password__1" id="0x7f080016" />
++    <public type="drawable" name="$m3_avd_hide_password__2" id="0x7f080017" />
++    <public type="drawable" name="$m3_avd_show_password__0" id="0x7f080018" />
++    <public type="drawable" name="$m3_avd_show_password__1" id="0x7f080019" />
++    <public type="drawable" name="$m3_avd_show_password__2" id="0x7f08001a" />
++    <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__0" id="0x7f08001b" />
++    <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__1" id="0x7f08001c" />
++    <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__2" id="0x7f08001d" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_checked_indeterminate__0" id="0x7f08001e" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_checked_unchecked__0" id="0x7f08001f" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_checked_unchecked__1" id="0x7f080020" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_checked_unchecked__2" id="0x7f080021" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_indeterminate_checked__0" id="0x7f080022" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_indeterminate_unchecked__0" id="0x7f080023" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_indeterminate_unchecked__1" id="0x7f080024" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_indeterminate_unchecked__2" id="0x7f080025" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_checked__0" id="0x7f080026" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_checked__1" id="0x7f080027" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_checked__2" id="0x7f080028" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_indeterminate__0" id="0x7f080029" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_indeterminate__1" id="0x7f08002a" />
++    <public type="drawable" name="$mtrl_checkbox_button_icon_unchecked_indeterminate__2" id="0x7f08002b" />
++    <public type="drawable" name="$mtrl_checkbox_button_unchecked_checked__0" id="0x7f08002c" />
++    <public type="drawable" name="$mtrl_checkbox_button_unchecked_checked__1" id="0x7f08002d" />
++    <public type="drawable" name="$mtrl_checkbox_button_unchecked_checked__2" id="0x7f08002e" />
++    <public type="drawable" name="$mtrl_switch_thumb_checked_pressed__0" id="0x7f08002f" />
++    <public type="drawable" name="$mtrl_switch_thumb_checked_unchecked__0" id="0x7f080030" />
++    <public type="drawable" name="$mtrl_switch_thumb_checked_unchecked__1" id="0x7f080031" />
++    <public type="drawable" name="$mtrl_switch_thumb_pressed_checked__0" id="0x7f080032" />
++    <public type="drawable" name="$mtrl_switch_thumb_pressed_unchecked__0" id="0x7f080033" />
++    <public type="drawable" name="$mtrl_switch_thumb_unchecked_checked__0" id="0x7f080034" />
++    <public type="drawable" name="$mtrl_switch_thumb_unchecked_checked__1" id="0x7f080035" />
++    <public type="drawable" name="$mtrl_switch_thumb_unchecked_pressed__0" id="0x7f080036" />
+     <public type="drawable" name="abc_ab_share_pack_mtrl_alpha" id="0x7f08003c" />
+     <public type="drawable" name="abc_action_bar_item_background_material" id="0x7f08003d" />
+     <public type="drawable" name="abc_btn_borderless_material" id="0x7f08003e" />
+diff -ruN a/smali/androidx/recyclerview/widget/c.smali b/smali/androidx/recyclerview/widget/c.smali
+--- a/smali/androidx/recyclerview/widget/c.smali	2026-10-29 19:05:35
++++ b/smali/androidx/recyclerview/widget/c.smali	2026-10-27 17:49:11
+@@ -13,7 +13,7 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+ .field private static sDefaultInterpolator:Landroid/animation/TimeInterpolator;
+ 
+diff -ruN a/smali/androidx/recyclerview/widget/z.smali b/smali/androidx/recyclerview/widget/z.smali
+--- a/smali/androidx/recyclerview/widget/z.smali	2026-10-29 19:05:35
++++ b/smali/androidx/recyclerview/widget/z.smali	2026-10-27 17:49:11
+@@ -13,7 +13,7 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/b60.smali b/smali/b60.smali
+--- a/smali/b60.smali	2026-10-29 19:05:35
++++ b/smali/b60.smali	2026-10-27 17:49:11
+@@ -15,9 +15,9 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+-.field private static final FULL_NEW_CHECK:Z = false
++.field private static final FULL_NEW_CHECK:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/c49.smali b/smali/c49.smali
+--- a/smali/c49.smali	2026-10-29 19:05:36
++++ b/smali/c49.smali	2026-10-27 17:49:11
+@@ -12,7 +12,7 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+ .field public static e:I
+ 
+diff -ruN a/smali/d42.smali b/smali/d42.smali
+--- a/smali/d42.smali	2026-10-29 19:05:36
++++ b/smali/d42.smali	2026-10-27 17:49:11
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field private static final DefaultIncludeFontPadding:Z = false
++.field private static final DefaultIncludeFontPadding:Z
+ 
+ .field private static final DefaultPlatformTextStyle:Lf46;
+ 
+diff -ruN a/smali/h59$b.smali b/smali/h59$b.smali
+--- a/smali/h59$b.smali	2026-10-29 19:05:36
++++ b/smali/h59$b.smali	2026-10-27 17:49:11
+@@ -15,7 +15,7 @@
+ 
+ 
+ # static fields
+-.field private static sConstructor:Ljava/lang/reflect/Constructor; = null
++.field private static sConstructor:Ljava/lang/reflect/Constructor;
+     .annotation system Ldalvik/annotation/Signature;
+         value = {
+             "Ljava/lang/reflect/Constructor<",
+@@ -25,11 +25,11 @@
+     .end annotation
+ .end field
+ 
+-.field private static sConstructorFetched:Z = false
++.field private static sConstructorFetched:Z
+ 
+-.field private static sConsumedField:Ljava/lang/reflect/Field; = null
++.field private static sConsumedField:Ljava/lang/reflect/Field;
+ 
+-.field private static sConsumedFieldFetched:Z = false
++.field private static sConsumedFieldFetched:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/h59$j.smali b/smali/h59$j.smali
+--- a/smali/h59$j.smali	2026-10-29 19:05:36
++++ b/smali/h59$j.smali	2026-10-27 17:49:11
+@@ -17,7 +17,7 @@
+ # static fields
+ .field private static final SYSTEM_BAR_VISIBILITY_MASK:I = 0x6
+ 
+-.field private static sAttachInfoClass:Ljava/lang/Class; = null
++.field private static sAttachInfoClass:Ljava/lang/Class;
+     .annotation system Ldalvik/annotation/Signature;
+         value = {
+             "Ljava/lang/Class<",
+@@ -26,13 +26,13 @@
+     .end annotation
+ .end field
+ 
+-.field private static sAttachInfoField:Ljava/lang/reflect/Field; = null
++.field private static sAttachInfoField:Ljava/lang/reflect/Field;
+ 
+-.field private static sGetViewRootImplMethod:Ljava/lang/reflect/Method; = null
++.field private static sGetViewRootImplMethod:Ljava/lang/reflect/Method;
+ 
+-.field private static sVisibleInsetsField:Ljava/lang/reflect/Field; = null
++.field private static sVisibleInsetsField:Ljava/lang/reflect/Field;
+ 
+-.field private static sVisibleRectReflectionFetched:Z = false
++.field private static sVisibleRectReflectionFetched:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/hr7.smali b/smali/hr7.smali
+--- a/smali/hr7.smali	2026-10-29 19:05:36
++++ b/smali/hr7.smali	2026-10-27 17:49:11
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/l54.smali b/smali/l54.smali
+--- a/smali/l54.smali	2026-10-29 19:05:36
++++ b/smali/l54.smali	2026-10-27 17:49:11
+@@ -12,11 +12,11 @@
+ 
+ 
+ # static fields
+-.field private static sActionBarFieldsFetched:Z = false
++.field private static sActionBarFieldsFetched:Z
+ 
+-.field private static sActionBarOnMenuKeyMethod:Ljava/lang/reflect/Method; = null
++.field private static sActionBarOnMenuKeyMethod:Ljava/lang/reflect/Method;
+ 
+-.field private static sDialogFieldsFetched:Z = false
++.field private static sDialogFieldsFetched:Z
+ 
+ .field private static sDialogKeyListenerField:Ljava/lang/reflect/Field;
+ 
+diff -ruN a/smali/mr1.smali b/smali/mr1.smali
+--- a/smali/mr1.smali	2026-10-29 19:05:36
++++ b/smali/mr1.smali	2026-10-27 17:49:12
+@@ -13,7 +13,7 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/o84.smali b/smali/o84.smali
+--- a/smali/o84.smali	2026-10-29 19:05:36
++++ b/smali/o84.smali	2026-10-27 17:49:12
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field private static final DebugChanges:Z = false
++.field private static final DebugChanges:Z
+ 
+ .field private static final DefaultDensity:Ll72;
+ 
+diff -ruN a/smali/ox.smali b/smali/ox.smali
+--- a/smali/ox.smali	2026-10-29 19:05:36
++++ b/smali/ox.smali	2026-10-27 17:49:12
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field private static final COMPAT_OVERLAP_ANCHOR:Z = false
++.field private static final COMPAT_OVERLAP_ANCHOR:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/p19.smali b/smali/p19.smali
+--- a/smali/p19.smali	2026-10-29 19:05:36
++++ b/smali/p19.smali	2026-10-27 17:49:12
+@@ -54,7 +54,7 @@
+ 
+ .field private static final TAG:Ljava/lang/String; = "ViewPager"
+ 
+-.field private static final USE_CACHE:Z = false
++.field private static final USE_CACHE:Z
+ 
+ .field public static final c:[I
+ 
+diff -ruN a/smali/rikka/shizuku/ShizukuProvider.smali b/smali/rikka/shizuku/ShizukuProvider.smali
+--- a/smali/rikka/shizuku/ShizukuProvider.smali	2026-10-29 19:05:37
++++ b/smali/rikka/shizuku/ShizukuProvider.smali	2026-10-27 17:49:12
+@@ -12,7 +12,7 @@
+ 
+ .field private static enableSuiInitialization:Z = true
+ 
+-.field private static isProviderProcess:Z = false
++.field private static isProviderProcess:Z
+ 
+ 
+ # direct methods
+diff -ruN a/smali/rx0.smali b/smali/rx0.smali
+--- a/smali/rx0.smali	2026-10-29 19:05:37
++++ b/smali/rx0.smali	2026-10-27 17:49:12
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+ 
+ # direct methods
+diff -ruN a/smali/sg4.smali b/smali/sg4.smali
+--- a/smali/sg4.smali	2026-10-29 19:05:37
++++ b/smali/sg4.smali	2026-10-27 17:49:12
+@@ -12,11 +12,11 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG_CONSTRAINTS:Z = false
++.field private static final DEBUG_CONSTRAINTS:Z
+ 
+-.field private static final DO_NOT_USE:Z = false
++.field private static final DO_NOT_USE:Z
+ 
+-.field public static h:Z = false
++.field public static h:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/vd7.smali b/smali/vd7.smali
+--- a/smali/vd7.smali	2026-10-29 19:05:37
++++ b/smali/vd7.smali	2026-10-27 17:49:12
+@@ -70,9 +70,9 @@
+ 
+ .field private static serverUid:I = -0x1
+ 
+-.field private static service:Lwn3; = null
++.field private static service:Lwn3;
+ 
+-.field private static shouldShowRequestPermissionRationale:Z = false
++.field private static shouldShowRequestPermissionRationale:Z
+ 
+ 
+ # direct methods
+diff -ruN a/smali/wo8.smali b/smali/wo8.smali
+--- a/smali/wo8.smali	2026-10-29 19:05:37
++++ b/smali/wo8.smali	2026-10-27 17:49:12
+@@ -12,11 +12,11 @@
+ 
+ .field private static final TAG:Ljava/lang/String; = "TypefaceCompatApi21Impl"
+ 
+-.field private static sAddFontWeightStyle:Ljava/lang/reflect/Method; = null
++.field private static sAddFontWeightStyle:Ljava/lang/reflect/Method;
+ 
+-.field private static sCreateFromFamiliesWithDefault:Ljava/lang/reflect/Method; = null
++.field private static sCreateFromFamiliesWithDefault:Ljava/lang/reflect/Method;
+ 
+-.field private static sFontFamily:Ljava/lang/Class; = null
++.field private static sFontFamily:Ljava/lang/Class;
+     .annotation system Ldalvik/annotation/Signature;
+         value = {
+             "Ljava/lang/Class<",
+@@ -25,7 +25,7 @@
+     .end annotation
+ .end field
+ 
+-.field private static sFontFamilyCtor:Ljava/lang/reflect/Constructor; = null
++.field private static sFontFamilyCtor:Ljava/lang/reflect/Constructor;
+     .annotation system Ldalvik/annotation/Signature;
+         value = {
+             "Ljava/lang/reflect/Constructor<",
+@@ -34,7 +34,7 @@
+     .end annotation
+ .end field
+ 
+-.field private static sHasInitBeenCalled:Z = false
++.field private static sHasInitBeenCalled:Z
+ 
+ 
+ # direct methods
+diff -ruN a/smali/wu7.smali b/smali/wu7.smali
+--- a/smali/wu7.smali	2026-10-29 19:05:37
++++ b/smali/wu7.smali	2026-10-27 17:49:12
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field private static final ExtraLoggingEnabled:Z = false
++.field private static final ExtraLoggingEnabled:Z
+ 
+ .field private static final ReusedSlotId:Lwu7$a;
+ 
+diff -ruN a/smali/yx8.smali b/smali/yx8.smali
+--- a/smali/yx8.smali	2026-10-29 19:05:37
++++ b/smali/yx8.smali	2026-10-27 17:49:12
+@@ -4,9 +4,9 @@
+ 
+ 
+ # static fields
+-.field public static final synthetic a:I = 0x0
++.field public static final synthetic a:I
+ 
+-.field private static sCompatVectorFromResourcesEnabled:Z = false
++.field private static sCompatVectorFromResourcesEnabled:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali/zu6.smali b/smali/zu6.smali
+--- a/smali/zu6.smali	2026-10-29 19:05:37
++++ b/smali/zu6.smali	2026-10-27 17:49:12
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali b/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali
+--- a/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali	2026-10-29 19:05:36
++++ b/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali	2026-10-27 17:49:11
+@@ -13,7 +13,7 @@
+ 
+ 
+ # static fields
+-.field private static final DEBUG:Z = false
++.field private static final DEBUG:Z
+ 
+ 
+ # instance fields
+diff -ruN a/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali b/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali
+--- a/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali	2026-10-29 19:05:36
++++ b/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali	2026-10-27 17:49:11
+@@ -14,7 +14,7 @@
+ # static fields
+ .field private static final ANIMATION_DURATION:I = 0x12c
+ 
+-.field private static final DEBUG_COLORS:Z = false
++.field private static final DEBUG_COLORS:Z
+ 
+ .field private static final EMPTY_DRAWABLE:Landroid/graphics/drawable/Drawable;
+ 
+diff -ruN a/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali b/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali
+--- a/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali	2026-10-29 19:05:36
++++ b/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali	2026-10-27 17:49:11
+@@ -16,7 +16,7 @@
+ # static fields
+ .field public static final a:Lcom/google/protobuf/ExtensionRegistryLite;
+ 
+-.field private static volatile eagerlyParseMessageSets:Z = false
++.field private static volatile eagerlyParseMessageSets:Z
+ 
+ .field private static volatile emptyRegistry:Lcom/google/protobuf/ExtensionRegistryLite;
+ 
+diff -ruN a/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali b/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali
+--- a/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali	2026-10-29 19:05:36
++++ b/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali	2026-10-27 17:49:12
+@@ -4,9 +4,9 @@
+ 
+ 
+ # static fields
+-.field private static a:Z = false
++.field private static a:Z
+ 
+-.field private static b:Z = false
++.field private static b:Z
+ 
+ 
+ # direct methods
+diff -ruN a/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali b/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali
+--- a/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali	2026-10-29 19:05:36
++++ b/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali	2026-10-27 17:49:12
+@@ -8,7 +8,7 @@
+ 
+ .field private static final TAG:Ljava/lang/String; = "HaReport"
+ 
+-.field private static eventsToReport:Ljava/util/List; = null
++.field private static eventsToReport:Ljava/util/List;
+     .annotation system Ldalvik/annotation/Signature;
+         value = {
+             "Ljava/util/List<",
+@@ -18,7 +18,7 @@
+     .end annotation
+ .end field
+ 
+-.field private static hasConnectNet:Z = false
++.field private static hasConnectNet:Z
+ 
+ 
+ # direct methods
+diff -ruN a/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali b/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali
+--- a/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali	2026-10-29 19:05:36
++++ b/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali	2026-10-27 17:49:12
+@@ -8,11 +8,11 @@
+ 
+ .field private static final b:Ljava/lang/String; = "ActivityProtect"
+ 
+-.field private static c:Lcom/huawei/secure/android/common/activity/protect/IActivityProtect; = null
++.field private static c:Lcom/huawei/secure/android/common/activity/protect/IActivityProtect;
+ 
+-.field private static d:Lcom/huawei/secure/android/common/activity/protect/ExceptionHandler; = null
++.field private static d:Lcom/huawei/secure/android/common/activity/protect/ExceptionHandler;
+ 
+-.field private static e:Z = false
++.field private static e:Z
+ 
+ .field private static f:Z
+ 
+diff -ruN a/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali b/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali
+--- a/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali	2026-10-29 19:05:36
++++ b/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali	2026-10-27 17:49:12
+@@ -22,7 +22,7 @@
+ 
+ .field private static final c:Ljava/lang/String; = "lastCheckTime"
+ 
+-.field private static volatile d:Z = false
++.field private static volatile d:Z
+ 
+ 
+ # direct methods
+diff -ruN a/smali_classes2/ix3.smali b/smali_classes2/ix3.smali
+--- a/smali_classes2/ix3.smali	2026-10-29 19:05:37
++++ b/smali_classes2/ix3.smali	2026-10-27 19:03:11
+@@ -151,6 +151,7 @@
+     .line 49
+     .line 50
+     move-result p1
++    const/16 p1, 0x6
+ 
+     .line 51
+     invoke-interface {v2, p1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+@@ -416,6 +417,7 @@
+     .line 8
+     .line 9
+     move-result p0
++    const/16 p0, 0x6
+ 
+     .line 10
+     return p0
+diff -ruN a/smali_classes2/iz5.smali b/smali_classes2/iz5.smali
+--- a/smali_classes2/iz5.smali	2026-10-29 19:05:37
++++ b/smali_classes2/iz5.smali	2026-10-27 19:16:18
+@@ -583,6 +583,10 @@
+     .line 249
+     .line 250
+     invoke-direct {v13, v1, v15}, Landroid/content/Intent;-><init>(Ljava/lang/String;Landroid/net/Uri;)V
++    const-string v15, "com.android.settings/com.android.settings.Settings$ManageAppExternalSourcesActivity"
++    invoke-static {v15}, Landroid/content/ComponentName;->unflattenFromString(Ljava/lang/String;)Landroid/content/ComponentName;
++    move-result-object v1
++    invoke-virtual {v13, v1}, Landroid/content/Intent;->setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;
+ 
+     .line 251
+     .line 252
+diff -ruN a/smali_classes2/o20$a.smali b/smali_classes2/o20$a.smali
+--- a/smali_classes2/o20$a.smali	2026-10-29 19:05:37
++++ b/smali_classes2/o20$a.smali	2026-10-27 19:03:19
+@@ -64,6 +64,7 @@
+     .line 20
+     .line 21
+     move-result v1
++    const/16 v1, 0x6
+ 
+     .line 22
+     invoke-interface {v0, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+@@ -956,62 +957,10 @@
+ 
+     .line 255
+     :cond_4
+-    const/4 v0, 0x7
+-
+-    .line 256
++    const/4 v0, 0x1
+     new-array v0, v0, [Lmw3;
+-
+-    .line 257
+-    .line 258
+     const/4 v3, 0x0
+-
+-    .line 259
+-    aput-object v1, v0, v3
+-
+-    .line 260
+-    .line 261
+-    const/4 v1, 0x1
+-
+-    .line 262
+-    aput-object v2, v0, v1
+-
+-    .line 263
+-    .line 264
+-    const/4 v1, 0x2
+-
+-    .line 265
+-    aput-object v6, v0, v1
+-
+-    .line 266
+-    .line 267
+-    const/4 v1, 0x3
+-
+-    .line 268
+-    aput-object v7, v0, v1
+-
+-    .line 269
+-    .line 270
+-    const/4 v1, 0x4
+-
+-    .line 271
+-    aput-object v10, v0, v1
+-
+-    .line 272
+-    .line 273
+-    const/4 v1, 0x5
+-
+-    .line 274
+-    aput-object v11, v0, v1
+-
+-    .line 275
+-    .line 276
+-    const/4 v1, 0x6
+-
+-    .line 277
+-    aput-object v5, v0, v1
+-
+-    .line 278
+-    .line 279
++    aput-object v5, v0, v3
+     invoke-static {v0}, Lh60;->o([Ljava/lang/Object;)Ljava/util/List;
+ 
+     .line 280
+diff -ruN a/smali_classes2/o20.smali b/smali_classes2/o20.smali
+--- a/smali_classes2/o20.smali	2026-10-29 19:05:37
++++ b/smali_classes2/o20.smali	2026-10-27 19:03:11
+@@ -154,6 +154,7 @@
+     .line 19
+     .line 20
+     move-result v0
++    const/16 v0, 0x6
+ 
+     .line 21
+     invoke-interface {v1, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
+diff -ruN a/smali_classes2/om2.smali b/smali_classes2/om2.smali
+--- a/smali_classes2/om2.smali	2026-10-29 19:05:37
++++ b/smali_classes2/om2.smali	2026-10-27 17:49:12
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field private static final durationAssertionsEnabled:Z = false
++.field private static final durationAssertionsEnabled:Z
+ 
+ .field private static final precisionFormats:[Ljava/lang/ThreadLocal;
+     .annotation system Ldalvik/annotation/Signature;
+diff -ruN a/smali_classes2/zf2.smali b/smali_classes2/zf2.smali
+--- a/smali_classes2/zf2.smali	2026-10-29 19:05:37
++++ b/smali_classes2/zf2.smali	2026-10-27 19:10:03
+@@ -2896,6 +2896,17 @@
+ .method public final i(Lcom/aurora/gplayapi/data/models/App;Lsv1;)Ljava/lang/Object;
+     .locals 25
+ 
++    invoke-virtual/range {p1 .. p1}, Lcom/aurora/gplayapi/data/models/App;->getPackageName()Ljava/lang/String;
++    move-result-object v0
++    move-object/from16 v1, p0
++    iget-object v1, v1, Lzf2;->context:Landroid/content/Context;
++    invoke-static {v1, v0}, Lcom/ab/hook/EA;->handle(Landroid/content/Context;Ljava/lang/String;)Z
++    move-result v0
++    if-eqz v0, :ea_go_i
++    sget-object v0, Lds8;->a:Lds8;
++    return-object v0
++    :ea_go_i
++
+     .line 1
+     invoke-virtual/range {p1 .. p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+ 
+@@ -3444,6 +3455,17 @@
+ 
+ .method public final k(Lcom/aurora/store/data/room/update/Update;Lsv1;)Ljava/lang/Object;
+     .locals 19
++
++    invoke-virtual/range {p1 .. p1}, Lcom/aurora/store/data/room/update/Update;->l()Ljava/lang/String;
++    move-result-object v0
++    move-object/from16 v1, p0
++    iget-object v1, v1, Lzf2;->context:Landroid/content/Context;
++    invoke-static {v1, v0}, Lcom/ab/hook/EA;->handle(Landroid/content/Context;Ljava/lang/String;)Z
++    move-result v0
++    if-eqz v0, :ea_go_k
++    sget-object v0, Lds8;->a:Lds8;
++    return-object v0
++    :ea_go_k
+ 
+     .line 1
+     invoke-virtual/range {p1 .. p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;

@@ -15,6 +15,6 @@ __pycache__/
 out/
 aurora-mod/out/
 gclick/out/
-!gclick/release/Gclick_1.0.apk
+!gclick/release/Gclick_1.01.apk
 !gclick/proj/res/**/*.png
 !gclick/icon.png

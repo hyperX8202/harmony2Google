@@ -19,11 +19,12 @@ see [Alternative: agent-driven Aurora setup](#alternative-agent-driven-aurora-se
 
 ## Install
 
-1. **[Download Gclick_1.0.apk](https://github.com/hyperX8202/harmony2Google/releases/latest/download/Gclick_1.0.apk)**
+1. **[Download Gclick_1.01.apk](https://github.com/hyperX8202/harmony2Google/releases/latest/download/Gclick_1.01.apk)**
    to your phone (direct download; all releases are on the
    [releases page](https://github.com/hyperX8202/harmony2Google/releases)). The same file is also
-   kept in the repo: [direct download](https://github.com/hyperX8202/harmony2Google/raw/main/gclick/release/Gclick_1.0.apk).
-   - SHA-256: `575d7ad0073cffe0c592a22219624fe62b14b9a713a44bdfc7034f276ec12869`
+   kept in the repo: [direct download](https://github.com/hyperX8202/harmony2Google/raw/main/gclick/release/Gclick_1.01.apk).
+   - Version 1.01, see the [changelog](CHANGELOG.md).
+   - SHA-256: `35d837e06df35789aa262f2536955799182b59eb75571b8be6febe7be7dad115`
    - Signing certificate SHA-256:
      `AB:5D:98:1F:9A:20:0A:AB:76:FC:AA:B4:C4:17:AB:CC:42:D3:44:9C:92:59:9A:AE:EB:93:07:94:9F:48:3A:AA`
    - Or build it yourself, see [Build from source](#build-from-source).
@@ -133,7 +134,7 @@ required. The scripts download apktool, uber-apk-signer, R8 and a compile-time `
 ```sh
 ./setup.sh download --variant hw    # official Aurora Store 4.8.4 (hw); the certificate is verified
 aurora-mod/build.sh                 # official APK + patch + helper  ->  aurora-mod/out/astore.apk
-gclick/build.sh                     # Gclick sources + that Aurora    ->  gclick/out/Gclick_1.0.apk
+gclick/build.sh                     # Gclick sources + that Aurora    ->  gclick/out/Gclick_1.01.apk
 ```
 
 To use your own key: `KEYSTORE=/path/to.jks KEYSTORE_ALIAS=alias KEYSTORE_PASS=secret`.

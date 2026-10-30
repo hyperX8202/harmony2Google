@@ -3,7 +3,7 @@
 #
 #   src/ -> javac -> D8 -> classes.dex
 #   proj/ (manifest, resources) + the modified Aurora APK as assets/astore.apk
-#        -> apktool build -> sign with YOUR key -> out/Gclick_1.0.apk
+#        -> apktool build -> sign with YOUR key -> out/Gclick_1.01.apk
 #
 # Build the modified Aurora first:  aurora-mod/build.sh
 # Usage: gclick/build.sh [path/to/astore.apk]
@@ -13,7 +13,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$HERE/../aurora-mod/common.sh"
 
 ASTORE_APK="${1:-$HERE/../aurora-mod/out/astore.apk}"
-OUT="${OUT:-$HERE/out/Gclick_1.0.apk}"
+OUT="${OUT:-$HERE/out/Gclick_1.01.apk}"
 
 [ -f "$ASTORE_APK" ] || die "modified Aurora APK not found: $ASTORE_APK (run aurora-mod/build.sh first)"
 

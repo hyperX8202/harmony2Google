@@ -9,7 +9,7 @@ Android app (`com.ab.gclick`, minSdk 26) that runs in the Android container of H
 |------|---------|
 | `src/com/ab/oneclick/` | Java sources. The Java package is still `com.ab.oneclick` (the project's former name); the application id is `com.ab.gclick`. |
 | `proj/` | apktool project: `AndroidManifest.xml`, resources, `apktool.yml`. |
-| `release/Gclick_1.0.apk` | The release build (modified Aurora embedded as `assets/astore.apk`). |
+| `release/Gclick_1.01.apk` | The release build (modified Aurora embedded as `assets/astore.apk`). |
 | `build.sh` | Builds the APK from source without Android SDK or Gradle. |
 
 Main classes:
@@ -28,7 +28,7 @@ Main classes:
 
 ```sh
 aurora-mod/build.sh      # modified Aurora first, see ../aurora-mod/README.md
-gclick/build.sh          # -> gclick/out/Gclick_1.0.apk
+gclick/build.sh          # -> gclick/out/Gclick_1.01.apk
 ```
 
 `build.sh` compiles with `javac -source 8` against a public `android.jar` stub, dexes with R8's D8,

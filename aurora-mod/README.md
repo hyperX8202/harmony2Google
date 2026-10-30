@@ -21,10 +21,12 @@ certificate.
 Class names are the obfuscated names of the official 4.8.4 build.
 
 - **Package rename** to `com.ab.astore` (manifest and the places that carry the package name).
-- **Only the microG installer** (`o20`, `o20$a`, `ix3`): the stored installer preference is
-  overridden with microG, and the installer option list has a single entry. microG's
-  `org.microg.vending.action.INSTALL_PACKAGE` hand-off is the only install path that works in the
-  container.
+- **Installer chosen per app** (`o20`, `o20$a`, `ix3`, and the call sites `zf2`, `op5`, `vh2`, `ng2`):
+  the stored installer preference is ignored. `o20.a(ZI)` takes the installer index from the caller;
+  the new wrappers `o20.f(String)` / `o20.g(Download)` ask `com.ab.hook.EA.idx(context, package)`:
+  index 6 (microG) if EasyAbroad knows the package (only reached when the EasyAbroad hand-off
+  failed), index 0 (session installer, i.e. DroiTong) for every other app. The installer option
+  list in the settings has a single entry (microG) and is only a display.
 - **EasyAbroad switch** (`zf2`, the download helper): at the start of the "install app" and
   "update app" functions the package name is checked with `com.ab.hook.EA.handle(context, pkg)`.
   If EasyAbroad knows the package, `EA` starts EasyAbroad's install page for it

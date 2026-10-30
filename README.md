@@ -23,7 +23,7 @@ see [Alternative: agent-driven Aurora setup](#alternative-agent-driven-aurora-se
    to your phone (direct download; all releases are on the
    [releases page](https://github.com/hyperX8202/harmony2Google/releases)). The same file is also
    kept in the repo: [direct download](https://github.com/hyperX8202/harmony2Google/raw/main/gclick/release/Gclick_1.0.apk).
-   - SHA-256: `72e806315e78a52d9ae444c3eb99ce49a89b4dff96f9910ff83bcae11d046be6`
+   - SHA-256: `575d7ad0073cffe0c592a22219624fe62b14b9a713a44bdfc7034f276ec12869`
    - Signing certificate SHA-256:
      `AB:5D:98:1F:9A:20:0A:AB:76:FC:AA:B4:C4:17:AB:CC:42:D3:44:9C:92:59:9A:AE:EB:93:07:94:9F:48:3A:AA`
    - Or build it yourself, see [Build from source](#build-from-source).
@@ -69,9 +69,11 @@ EasyAbroad itself. An unmodified Aurora Store downloads them, but the installati
   not know are installed directly by Aurora as usual. The list of known package names is
   `aurora-mod/assets/easyabroad.txt` (24,060 names, a snapshot taken from EasyAbroad 3.05.62; it
   may become outdated).
-- **Only the microG installer is available.** The other installers are removed from the settings
-  and microG is selected permanently, because it is the only one that works in this container.
-  microG refuses installs until you switch on *Allow App Installation* (EasyAbroad framework
+- **The installer is chosen per app, not in the settings.** Apps that EasyAbroad knows go to
+  EasyAbroad (see above). All other apps (K-9 Mail, Telegram, …) are installed through Android's
+  normal session installer, which the container hands to 卓易通 (DroiTong). The installer list in
+  Aurora's settings shows only microG and is just a display. microG, the fallback for a known app when the hand-off to EasyAbroad
+  fails, refuses installs until you switch on *Allow App Installation* (EasyAbroad framework
   settings → Play Store services → ⋮ → App Installer Settings). Gclick checks this for you and
   shows where to tap.
 - **The "install unknown apps" button of the first-start wizard now works** (it opens the correct

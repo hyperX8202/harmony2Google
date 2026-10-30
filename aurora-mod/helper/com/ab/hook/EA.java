@@ -79,6 +79,16 @@ public final class EA {
         return -1;
     }
 
+    /** Installer-Index in Aurora: 6 = microG (Apps, die EasyAbroad kennt; nur Rueckfallweg), 0 = Session-Installer (alle anderen). */
+    public static int idx(Context ctx, String pkg) {
+        try {
+            if (ctx != null && pkg != null && load(ctx).contains(pkg)) return 6;
+            return pkg == null ? 6 : 0;
+        } catch (Throwable t) {
+            return 6;
+        }
+    }
+
     /** true = EasyAbroad uebernimmt, Aurora soll selbst nichts laden. */
     public static boolean handle(Context ctx, String pkg) {
         try {

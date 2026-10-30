@@ -1,6 +1,6 @@
 diff -ruN a/AndroidManifest.xml b/AndroidManifest.xml
---- a/AndroidManifest.xml	2026-10-29 19:05:36
-+++ b/AndroidManifest.xml	2026-10-29 15:22:28
+--- a/AndroidManifest.xml	2026-10-30 15:28:41
++++ b/AndroidManifest.xml	2026-10-30 15:37:06
 @@ -1,5 +1,5 @@
  <?xml version="1.0" encoding="utf-8"?>
 -<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="37" android:compileSdkVersionCodename="17" package="com.aurora.store" platformBuildVersionCode="37" platformBuildVersionName="17">
@@ -34,8 +34,8 @@ diff -ruN a/AndroidManifest.xml b/AndroidManifest.xml
      </application>
  </manifest>
 diff -ruN a/apktool.yml b/apktool.yml
---- a/apktool.yml	2026-10-29 19:05:37
-+++ b/apktool.yml	2026-10-29 15:22:28
+--- a/apktool.yml	2026-10-30 15:28:42
++++ b/apktool.yml	2026-10-30 15:37:06
 @@ -1,5 +1,5 @@
  version: 3.0.3
 -apkFileName: AuroraStore-hw-4.8.4.apk
@@ -49,14 +49,14 @@ diff -ruN a/apktool.yml b/apktool.yml
  versionInfo:
 -  versionCode: 76
 -  versionName: 4.8.4-hw
-+  versionCode: 82
-+  versionName: 4.8.4-hw7
++  versionCode: 84
++  versionName: 4.8.4-hw9
  resourcesInfo:
    packageId: 127
  doNotCompress:
 diff -ruN a/res/values/attrs.xml b/res/values/attrs.xml
---- a/res/values/attrs.xml	2026-10-29 19:05:36
-+++ b/res/values/attrs.xml	2026-10-27 17:49:11
+--- a/res/values/attrs.xml	2026-10-30 15:28:41
++++ b/res/values/attrs.xml	2026-10-30 15:29:19
 @@ -51,24 +51,24 @@
      <attr name="allowStacking" format="boolean" />
      <attr name="alpha" format="float" />
@@ -1079,8 +1079,8 @@ diff -ruN a/res/values/attrs.xml b/res/values/attrs.xml
      <attr name="voiceIcon" format="reference" />
      <attr name="widgetLayout" format="reference" />
 diff -ruN a/res/values/public.xml b/res/values/public.xml
---- a/res/values/public.xml	2026-10-29 19:05:36
-+++ b/res/values/public.xml	2026-10-27 17:49:11
+--- a/res/values/public.xml	2026-10-30 15:28:41
++++ b/res/values/public.xml	2026-10-30 15:29:19
 @@ -2681,50 +2681,50 @@
      <public type="drawable" name="$ic_launcher_foreground__2" id="0x7f080008" />
      <public type="drawable" name="$ic_launcher_foreground__3" id="0x7f080009" />
@@ -1177,8 +1177,8 @@ diff -ruN a/res/values/public.xml b/res/values/public.xml
      <public type="drawable" name="abc_action_bar_item_background_material" id="0x7f08003d" />
      <public type="drawable" name="abc_btn_borderless_material" id="0x7f08003e" />
 diff -ruN a/smali/androidx/recyclerview/widget/c.smali b/smali/androidx/recyclerview/widget/c.smali
---- a/smali/androidx/recyclerview/widget/c.smali	2026-10-29 19:05:35
-+++ b/smali/androidx/recyclerview/widget/c.smali	2026-10-27 17:49:11
+--- a/smali/androidx/recyclerview/widget/c.smali	2026-10-30 15:28:43
++++ b/smali/androidx/recyclerview/widget/c.smali	2026-10-30 15:29:19
 @@ -13,7 +13,7 @@
  
  
@@ -1189,8 +1189,8 @@ diff -ruN a/smali/androidx/recyclerview/widget/c.smali b/smali/androidx/recycler
  .field private static sDefaultInterpolator:Landroid/animation/TimeInterpolator;
  
 diff -ruN a/smali/androidx/recyclerview/widget/z.smali b/smali/androidx/recyclerview/widget/z.smali
---- a/smali/androidx/recyclerview/widget/z.smali	2026-10-29 19:05:35
-+++ b/smali/androidx/recyclerview/widget/z.smali	2026-10-27 17:49:11
+--- a/smali/androidx/recyclerview/widget/z.smali	2026-10-30 15:28:43
++++ b/smali/androidx/recyclerview/widget/z.smali	2026-10-30 15:29:19
 @@ -13,7 +13,7 @@
  
  
@@ -1201,8 +1201,8 @@ diff -ruN a/smali/androidx/recyclerview/widget/z.smali b/smali/androidx/recycler
  
  # instance fields
 diff -ruN a/smali/b60.smali b/smali/b60.smali
---- a/smali/b60.smali	2026-10-29 19:05:35
-+++ b/smali/b60.smali	2026-10-27 17:49:11
+--- a/smali/b60.smali	2026-10-30 15:28:43
++++ b/smali/b60.smali	2026-10-30 15:29:19
 @@ -15,9 +15,9 @@
  
  
@@ -1216,8 +1216,8 @@ diff -ruN a/smali/b60.smali b/smali/b60.smali
  
  # instance fields
 diff -ruN a/smali/c49.smali b/smali/c49.smali
---- a/smali/c49.smali	2026-10-29 19:05:36
-+++ b/smali/c49.smali	2026-10-27 17:49:11
+--- a/smali/c49.smali	2026-10-30 15:28:43
++++ b/smali/c49.smali	2026-10-30 15:29:19
 @@ -12,7 +12,7 @@
  
  
@@ -1228,8 +1228,8 @@ diff -ruN a/smali/c49.smali b/smali/c49.smali
  .field public static e:I
  
 diff -ruN a/smali/d42.smali b/smali/d42.smali
---- a/smali/d42.smali	2026-10-29 19:05:36
-+++ b/smali/d42.smali	2026-10-27 17:49:11
+--- a/smali/d42.smali	2026-10-30 15:28:43
++++ b/smali/d42.smali	2026-10-30 15:29:19
 @@ -4,7 +4,7 @@
  
  
@@ -1240,8 +1240,8 @@ diff -ruN a/smali/d42.smali b/smali/d42.smali
  .field private static final DefaultPlatformTextStyle:Lf46;
  
 diff -ruN a/smali/h59$b.smali b/smali/h59$b.smali
---- a/smali/h59$b.smali	2026-10-29 19:05:36
-+++ b/smali/h59$b.smali	2026-10-27 17:49:11
+--- a/smali/h59$b.smali	2026-10-30 15:28:43
++++ b/smali/h59$b.smali	2026-10-30 15:29:19
 @@ -15,7 +15,7 @@
  
  
@@ -1267,8 +1267,8 @@ diff -ruN a/smali/h59$b.smali b/smali/h59$b.smali
  
  # instance fields
 diff -ruN a/smali/h59$j.smali b/smali/h59$j.smali
---- a/smali/h59$j.smali	2026-10-29 19:05:36
-+++ b/smali/h59$j.smali	2026-10-27 17:49:11
+--- a/smali/h59$j.smali	2026-10-30 15:28:43
++++ b/smali/h59$j.smali	2026-10-30 15:29:19
 @@ -17,7 +17,7 @@
  # static fields
  .field private static final SYSTEM_BAR_VISIBILITY_MASK:I = 0x6
@@ -1297,8 +1297,8 @@ diff -ruN a/smali/h59$j.smali b/smali/h59$j.smali
  
  # instance fields
 diff -ruN a/smali/hr7.smali b/smali/hr7.smali
---- a/smali/hr7.smali	2026-10-29 19:05:36
-+++ b/smali/hr7.smali	2026-10-27 17:49:11
+--- a/smali/hr7.smali	2026-10-30 15:28:43
++++ b/smali/hr7.smali	2026-10-30 15:29:19
 @@ -4,7 +4,7 @@
  
  
@@ -1309,8 +1309,8 @@ diff -ruN a/smali/hr7.smali b/smali/hr7.smali
  
  # instance fields
 diff -ruN a/smali/l54.smali b/smali/l54.smali
---- a/smali/l54.smali	2026-10-29 19:05:36
-+++ b/smali/l54.smali	2026-10-27 17:49:11
+--- a/smali/l54.smali	2026-10-30 15:28:44
++++ b/smali/l54.smali	2026-10-30 15:29:19
 @@ -12,11 +12,11 @@
  
  
@@ -1327,8 +1327,8 @@ diff -ruN a/smali/l54.smali b/smali/l54.smali
  .field private static sDialogKeyListenerField:Ljava/lang/reflect/Field;
  
 diff -ruN a/smali/mr1.smali b/smali/mr1.smali
---- a/smali/mr1.smali	2026-10-29 19:05:36
-+++ b/smali/mr1.smali	2026-10-27 17:49:12
+--- a/smali/mr1.smali	2026-10-30 15:28:42
++++ b/smali/mr1.smali	2026-10-30 15:29:19
 @@ -13,7 +13,7 @@
  
  
@@ -1339,8 +1339,8 @@ diff -ruN a/smali/mr1.smali b/smali/mr1.smali
  
  # instance fields
 diff -ruN a/smali/o84.smali b/smali/o84.smali
---- a/smali/o84.smali	2026-10-29 19:05:36
-+++ b/smali/o84.smali	2026-10-27 17:49:12
+--- a/smali/o84.smali	2026-10-30 15:28:42
++++ b/smali/o84.smali	2026-10-30 15:29:19
 @@ -4,7 +4,7 @@
  
  
@@ -1351,8 +1351,8 @@ diff -ruN a/smali/o84.smali b/smali/o84.smali
  .field private static final DefaultDensity:Ll72;
  
 diff -ruN a/smali/ox.smali b/smali/ox.smali
---- a/smali/ox.smali	2026-10-29 19:05:36
-+++ b/smali/ox.smali	2026-10-27 17:49:12
+--- a/smali/ox.smali	2026-10-30 15:28:43
++++ b/smali/ox.smali	2026-10-30 15:29:19
 @@ -4,7 +4,7 @@
  
  
@@ -1363,8 +1363,8 @@ diff -ruN a/smali/ox.smali b/smali/ox.smali
  
  # instance fields
 diff -ruN a/smali/p19.smali b/smali/p19.smali
---- a/smali/p19.smali	2026-10-29 19:05:36
-+++ b/smali/p19.smali	2026-10-27 17:49:12
+--- a/smali/p19.smali	2026-10-30 15:28:42
++++ b/smali/p19.smali	2026-10-30 15:29:19
 @@ -54,7 +54,7 @@
  
  .field private static final TAG:Ljava/lang/String; = "ViewPager"
@@ -1375,8 +1375,8 @@ diff -ruN a/smali/p19.smali b/smali/p19.smali
  .field public static final c:[I
  
 diff -ruN a/smali/rikka/shizuku/ShizukuProvider.smali b/smali/rikka/shizuku/ShizukuProvider.smali
---- a/smali/rikka/shizuku/ShizukuProvider.smali	2026-10-29 19:05:37
-+++ b/smali/rikka/shizuku/ShizukuProvider.smali	2026-10-27 17:49:12
+--- a/smali/rikka/shizuku/ShizukuProvider.smali	2026-10-30 15:28:43
++++ b/smali/rikka/shizuku/ShizukuProvider.smali	2026-10-30 15:29:19
 @@ -12,7 +12,7 @@
  
  .field private static enableSuiInitialization:Z = true
@@ -1387,8 +1387,8 @@ diff -ruN a/smali/rikka/shizuku/ShizukuProvider.smali b/smali/rikka/shizuku/Shiz
  
  # direct methods
 diff -ruN a/smali/rx0.smali b/smali/rx0.smali
---- a/smali/rx0.smali	2026-10-29 19:05:37
-+++ b/smali/rx0.smali	2026-10-27 17:49:12
+--- a/smali/rx0.smali	2026-10-30 15:28:43
++++ b/smali/rx0.smali	2026-10-30 15:29:19
 @@ -4,7 +4,7 @@
  
  
@@ -1399,8 +1399,8 @@ diff -ruN a/smali/rx0.smali b/smali/rx0.smali
  
  # direct methods
 diff -ruN a/smali/sg4.smali b/smali/sg4.smali
---- a/smali/sg4.smali	2026-10-29 19:05:37
-+++ b/smali/sg4.smali	2026-10-27 17:49:12
+--- a/smali/sg4.smali	2026-10-30 15:28:43
++++ b/smali/sg4.smali	2026-10-30 15:29:19
 @@ -12,11 +12,11 @@
  
  
@@ -1417,8 +1417,8 @@ diff -ruN a/smali/sg4.smali b/smali/sg4.smali
  
  # instance fields
 diff -ruN a/smali/vd7.smali b/smali/vd7.smali
---- a/smali/vd7.smali	2026-10-29 19:05:37
-+++ b/smali/vd7.smali	2026-10-27 17:49:12
+--- a/smali/vd7.smali	2026-10-30 15:28:43
++++ b/smali/vd7.smali	2026-10-30 15:29:19
 @@ -70,9 +70,9 @@
  
  .field private static serverUid:I = -0x1
@@ -1432,8 +1432,8 @@ diff -ruN a/smali/vd7.smali b/smali/vd7.smali
  
  # direct methods
 diff -ruN a/smali/wo8.smali b/smali/wo8.smali
---- a/smali/wo8.smali	2026-10-29 19:05:37
-+++ b/smali/wo8.smali	2026-10-27 17:49:12
+--- a/smali/wo8.smali	2026-10-30 15:28:44
++++ b/smali/wo8.smali	2026-10-30 15:29:19
 @@ -12,11 +12,11 @@
  
  .field private static final TAG:Ljava/lang/String; = "TypefaceCompatApi21Impl"
@@ -1468,8 +1468,8 @@ diff -ruN a/smali/wo8.smali b/smali/wo8.smali
  
  # direct methods
 diff -ruN a/smali/wu7.smali b/smali/wu7.smali
---- a/smali/wu7.smali	2026-10-29 19:05:37
-+++ b/smali/wu7.smali	2026-10-27 17:49:12
+--- a/smali/wu7.smali	2026-10-30 15:28:43
++++ b/smali/wu7.smali	2026-10-30 15:29:19
 @@ -4,7 +4,7 @@
  
  
@@ -1480,8 +1480,8 @@ diff -ruN a/smali/wu7.smali b/smali/wu7.smali
  .field private static final ReusedSlotId:Lwu7$a;
  
 diff -ruN a/smali/yx8.smali b/smali/yx8.smali
---- a/smali/yx8.smali	2026-10-29 19:05:37
-+++ b/smali/yx8.smali	2026-10-27 17:49:12
+--- a/smali/yx8.smali	2026-10-30 15:28:43
++++ b/smali/yx8.smali	2026-10-30 15:29:19
 @@ -4,9 +4,9 @@
  
  
@@ -1495,8 +1495,8 @@ diff -ruN a/smali/yx8.smali b/smali/yx8.smali
  
  # instance fields
 diff -ruN a/smali/zu6.smali b/smali/zu6.smali
---- a/smali/zu6.smali	2026-10-29 19:05:37
-+++ b/smali/zu6.smali	2026-10-27 17:49:12
+--- a/smali/zu6.smali	2026-10-30 15:28:44
++++ b/smali/zu6.smali	2026-10-30 15:29:19
 @@ -4,7 +4,7 @@
  
  
@@ -1507,8 +1507,8 @@ diff -ruN a/smali/zu6.smali b/smali/zu6.smali
  
  # instance fields
 diff -ruN a/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali b/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali
---- a/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali	2026-10-29 19:05:36
-+++ b/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali	2026-10-27 17:49:11
+--- a/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali	2026-10-30 15:28:42
++++ b/smali_classes2/com/google/android/material/circularreveal/CircularRevealHelper.smali	2026-10-30 15:29:19
 @@ -13,7 +13,7 @@
  
  
@@ -1519,8 +1519,8 @@ diff -ruN a/smali_classes2/com/google/android/material/circularreveal/CircularRe
  
  # instance fields
 diff -ruN a/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali b/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali
---- a/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali	2026-10-29 19:05:36
-+++ b/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali	2026-10-27 17:49:11
+--- a/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali	2026-10-30 15:28:42
++++ b/smali_classes2/com/google/android/material/focus/FocusRingDrawable.smali	2026-10-30 15:29:19
 @@ -14,7 +14,7 @@
  # static fields
  .field private static final ANIMATION_DURATION:I = 0x12c
@@ -1531,8 +1531,8 @@ diff -ruN a/smali_classes2/com/google/android/material/focus/FocusRingDrawable.s
  .field private static final EMPTY_DRAWABLE:Landroid/graphics/drawable/Drawable;
  
 diff -ruN a/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali b/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali
---- a/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali	2026-10-29 19:05:36
-+++ b/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali	2026-10-27 17:49:11
+--- a/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali	2026-10-30 15:28:42
++++ b/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali	2026-10-30 15:29:19
 @@ -16,7 +16,7 @@
  # static fields
  .field public static final a:Lcom/google/protobuf/ExtensionRegistryLite;
@@ -1543,8 +1543,8 @@ diff -ruN a/smali_classes2/com/google/protobuf/ExtensionRegistryLite.smali b/sma
  .field private static volatile emptyRegistry:Lcom/google/protobuf/ExtensionRegistryLite;
  
 diff -ruN a/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali b/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali
---- a/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali	2026-10-29 19:05:36
-+++ b/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali	2026-10-27 17:49:12
+--- a/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali	2026-10-30 15:28:42
++++ b/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.smali	2026-10-30 15:29:19
 @@ -4,9 +4,9 @@
  
  
@@ -1558,8 +1558,8 @@ diff -ruN a/smali_classes2/com/huawei/appgallery/marketinstallerservice/b/b/d/b.
  
  # direct methods
 diff -ruN a/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali b/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali
---- a/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali	2026-10-29 19:05:36
-+++ b/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali	2026-10-27 17:49:12
+--- a/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali	2026-10-30 15:28:42
++++ b/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitReport.smali	2026-10-30 15:29:19
 @@ -8,7 +8,7 @@
  
  .field private static final TAG:Ljava/lang/String; = "HaReport"
@@ -1579,8 +1579,8 @@ diff -ruN a/smali_classes2/com/huawei/hms/framework/common/hianalytics/InitRepor
  
  # direct methods
 diff -ruN a/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali b/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali
---- a/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali	2026-10-29 19:05:36
-+++ b/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali	2026-10-27 17:49:12
+--- a/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali	2026-10-30 15:28:42
++++ b/smali_classes2/com/huawei/secure/android/common/activity/protect/ActivityProtect.smali	2026-10-30 15:29:19
 @@ -8,11 +8,11 @@
  
  .field private static final b:Ljava/lang/String; = "ActivityProtect"
@@ -1597,8 +1597,8 @@ diff -ruN a/smali_classes2/com/huawei/secure/android/common/activity/protect/Act
  .field private static f:Z
  
 diff -ruN a/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali b/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali
---- a/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali	2026-10-29 19:05:36
-+++ b/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali	2026-10-27 17:49:12
+--- a/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali	2026-10-30 15:28:42
++++ b/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali	2026-10-30 15:29:19
 @@ -22,7 +22,7 @@
  
  .field private static final c:Ljava/lang/String; = "lastCheckTime"
@@ -1609,8 +1609,8 @@ diff -ruN a/smali_classes2/com/huawei/secure/android/common/ssl/util/d.smali b/s
  
  # direct methods
 diff -ruN a/smali_classes2/ix3.smali b/smali_classes2/ix3.smali
---- a/smali_classes2/ix3.smali	2026-10-29 19:05:37
-+++ b/smali_classes2/ix3.smali	2026-10-27 19:03:11
+--- a/smali_classes2/ix3.smali	2026-10-30 15:28:41
++++ b/smali_classes2/ix3.smali	2026-10-30 15:29:19
 @@ -151,6 +151,7 @@
      .line 49
      .line 50
@@ -1628,8 +1628,8 @@ diff -ruN a/smali_classes2/ix3.smali b/smali_classes2/ix3.smali
      .line 10
      return p0
 diff -ruN a/smali_classes2/iz5.smali b/smali_classes2/iz5.smali
---- a/smali_classes2/iz5.smali	2026-10-29 19:05:37
-+++ b/smali_classes2/iz5.smali	2026-10-27 19:16:18
+--- a/smali_classes2/iz5.smali	2026-10-30 15:28:41
++++ b/smali_classes2/iz5.smali	2026-10-30 15:29:19
 @@ -583,6 +583,10 @@
      .line 249
      .line 250
@@ -1641,9 +1641,23 @@ diff -ruN a/smali_classes2/iz5.smali b/smali_classes2/iz5.smali
  
      .line 251
      .line 252
+diff -ruN a/smali_classes2/ng2.smali b/smali_classes2/ng2.smali
+--- a/smali_classes2/ng2.smali	2026-10-30 15:28:41
++++ b/smali_classes2/ng2.smali	2026-10-30 15:30:36
+@@ -272,7 +272,9 @@
+     move-result-object p1
+ 
+     .line 59
+-    invoke-virtual {p1, v5}, Lo20;->a(Z)Lkw3;
++    invoke-static {v7}, Lcom/aurora/store/data/work/DownloadWorker;->u(Lcom/aurora/store/data/work/DownloadWorker;)Lcom/aurora/store/data/room/download/Download;
++    move-result-object v0
++    invoke-virtual {p1, v0}, Lo20;->g(Lcom/aurora/store/data/room/download/Download;)Lkw3;
+ 
+     .line 60
+     .line 61
 diff -ruN a/smali_classes2/o20$a.smali b/smali_classes2/o20$a.smali
---- a/smali_classes2/o20$a.smali	2026-10-29 19:05:37
-+++ b/smali_classes2/o20$a.smali	2026-10-27 19:03:19
+--- a/smali_classes2/o20$a.smali	2026-10-30 15:28:42
++++ b/smali_classes2/o20$a.smali	2026-10-30 15:29:19
 @@ -64,6 +64,7 @@
      .line 20
      .line 21
@@ -1718,19 +1732,53 @@ diff -ruN a/smali_classes2/o20$a.smali b/smali_classes2/o20$a.smali
  
      .line 280
 diff -ruN a/smali_classes2/o20.smali b/smali_classes2/o20.smali
---- a/smali_classes2/o20.smali	2026-10-29 19:05:37
-+++ b/smali_classes2/o20.smali	2026-10-27 19:03:11
-@@ -154,6 +154,7 @@
+--- a/smali_classes2/o20.smali	2026-10-30 15:28:41
++++ b/smali_classes2/o20.smali	2026-10-30 15:30:36
+@@ -112,7 +112,32 @@
+ 
+ 
+ # virtual methods
+-.method public final a(Z)Lkw3;
++.method public final f(Ljava/lang/String;)Lkw3;
++    .locals 3
++
++    iget-object v0, p0, Lo20;->context:Landroid/content/Context;
++    invoke-static {v0, p1}, Lcom/ab/hook/EA;->idx(Landroid/content/Context;Ljava/lang/String;)I
++    move-result v0
++    const/4 v1, 0x0
++    invoke-virtual {p0, v1, v0}, Lo20;->a(ZI)Lkw3;
++    move-result-object v0
++    return-object v0
++.end method
++
++.method public final g(Lcom/aurora/store/data/room/download/Download;)Lkw3;
++    .locals 2
++
++    const/4 v0, 0x0
++    if-eqz p1, :ea_g
++    invoke-virtual {p1}, Lcom/aurora/store/data/room/download/Download;->l()Ljava/lang/String;
++    move-result-object v0
++    :ea_g
++    invoke-virtual {p0, v0}, Lo20;->f(Ljava/lang/String;)Lkw3;
++    move-result-object v0
++    return-object v0
++.end method
++
++.method public final a(ZI)Lkw3;
+     .locals 5
+ 
+     .line 1
+@@ -154,6 +179,7 @@
      .line 19
      .line 20
      move-result v0
-+    const/16 v0, 0x6
++    move v0, p2
  
      .line 21
      invoke-interface {v1, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
 diff -ruN a/smali_classes2/om2.smali b/smali_classes2/om2.smali
---- a/smali_classes2/om2.smali	2026-10-29 19:05:37
-+++ b/smali_classes2/om2.smali	2026-10-27 17:49:12
+--- a/smali_classes2/om2.smali	2026-10-30 15:28:41
++++ b/smali_classes2/om2.smali	2026-10-30 15:29:19
 @@ -4,7 +4,7 @@
  
  
@@ -1740,9 +1788,51 @@ diff -ruN a/smali_classes2/om2.smali b/smali_classes2/om2.smali
  
  .field private static final precisionFormats:[Ljava/lang/ThreadLocal;
      .annotation system Ldalvik/annotation/Signature;
+diff -ruN a/smali_classes2/op5.smali b/smali_classes2/op5.smali
+--- a/smali_classes2/op5.smali	2026-10-30 15:28:41
++++ b/smali_classes2/op5.smali	2026-10-30 15:30:36
+@@ -239,7 +239,7 @@
+     const/4 p2, 0x0
+ 
+     .line 108
+-    invoke-virtual {p0, p2}, Lo20;->a(Z)Lkw3;
++    invoke-virtual {p0, p1}, Lo20;->f(Ljava/lang/String;)Lkw3;
+ 
+     .line 109
+     .line 110
+diff -ruN a/smali_classes2/vh2.smali b/smali_classes2/vh2.smali
+--- a/smali_classes2/vh2.smali	2026-10-30 15:28:41
++++ b/smali_classes2/vh2.smali	2026-10-30 15:30:36
+@@ -599,7 +599,7 @@
+     const/4 v0, 0x1
+ 
+     .line 4
+-    invoke-virtual {p0, v0}, Lo20;->a(Z)Lkw3;
++    invoke-virtual {p0, p1}, Lo20;->g(Lcom/aurora/store/data/room/download/Download;)Lkw3;
+ 
+     .line 5
+     .line 6
 diff -ruN a/smali_classes2/zf2.smali b/smali_classes2/zf2.smali
---- a/smali_classes2/zf2.smali	2026-10-29 19:05:37
-+++ b/smali_classes2/zf2.smali	2026-10-27 19:10:03
+--- a/smali_classes2/zf2.smali	2026-10-30 15:28:41
++++ b/smali_classes2/zf2.smali	2026-10-30 15:30:36
+@@ -902,7 +902,7 @@
+     const/4 v1, 0x0
+ 
+     .line 67
+-    invoke-virtual {v0, v1}, Lo20;->a(Z)Lkw3;
++    invoke-virtual {v0, p1}, Lo20;->f(Ljava/lang/String;)Lkw3;
+ 
+     .line 68
+     .line 69
+@@ -2615,7 +2615,7 @@
+ 
+     .line 141
+     .line 142
+-    invoke-virtual {p0, v5}, Lo20;->a(Z)Lkw3;
++    invoke-virtual {p0, p2}, Lo20;->g(Lcom/aurora/store/data/room/download/Download;)Lkw3;
+ 
+     .line 143
+     .line 144
 @@ -2896,6 +2896,17 @@
  .method public final i(Lcom/aurora/gplayapi/data/models/App;Lsv1;)Ljava/lang/Object;
      .locals 25
